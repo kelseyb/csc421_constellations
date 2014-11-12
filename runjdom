@@ -1,0 +1,7 @@
+# shell script to compile and run Java programs that use JDOM
+# Usage: runjdom javafile(no ext) xmlfile
+# JMW 141029
+
+javac -cp .:jdom.jar $1.java
+java  -cp .:jdom.jar $1 $2
+
