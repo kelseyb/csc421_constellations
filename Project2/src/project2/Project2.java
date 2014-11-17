@@ -8,6 +8,7 @@ package project2;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Vector;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.JDOMException;
@@ -56,190 +57,13 @@ public class Project2 {
         {
             int size = xmlparser.starList.size();
             String d = xmlparser.starList.get(0).commonName;
-            double f = xmlparser.starList.get(0).vmag;
-            System.out.println("test--"+d+":"+f);
-        }
-        
-//        try
-//        {
-//            Document doc = builder.build(xml);// args[0] );	// parse XML tags
-//            Element root = doc.getRootElement();	// get root of XML tree
-//            parseChildren( root, 0 );			// print info in XML tree
+//            Vector <Double> a = xmlparser.starList.get(0).dec;
+//            Vector <Double> b = xmlparser.starList.get(0).ra;
+//            System.out.println("dec:"+a.get(0)+":"+a.get(1)+":"+a.get(2)+";");//xmlparser.starList.get(0).dec[0]);
+//            System.out.println("ra:"+b.get(0)+":"+b.get(1)+":"+b.get(2)+";");
             
-            //instead
-            //should be, xml then star/constellation
-//            if(root.getName() != "xml")
-//            {
-//                System.out.println( xml + " is not well-formed." );
-//            }
-//            else
-//                
-//            
-//            if(root.getName() == "star")
-//                parseStar(root);
-//            else if(root.getName() == "constellation")
-//                parseConstellation(root);
-//        }
-//        // JDOMException indicates a well-formedness error
-//        catch ( JDOMException e )
-//        {
-//            System.out.println( xml + " is not well-formed." );
-//            System.out.println( e.getMessage() );
-//        }
-//        catch ( IOException e )
-//        {
-//            System.out.println( e );
-//        }
+            double f = xmlparser.starList.get(0).vmag;
+            System.out.println("test--"+d+":"+f+":"+size);
+        }
     }
-
-//    // print XML tags and leaf node values
-//    public static void parseChildren( Element current, int depth )
-//    {
-//	// get children of current node
-//        List children = current.getChildren();
-//        Iterator iterator = children.iterator();
-//
-////        if(current.getName() == "xml")
-////        {
-////            System.out.print( "found xml ? recurring blah \n");
-////            Element child = ( Element ) iterator.next();
-////            listChildren( child, depth + 1 );
-////        } //prob dont need this. //well, def dont need this, but might revert.
-//        
-//        if(current.getName() == "star")
-//        {
-//            isStar = true;
-//            System.out.print( "   printing star yaya \n");
-//            parseStar(current);
-//        }
-//        else if(current.getName() == "constellation" && isStar == false)
-//        {
-//            System.out.print( "   printing constellation yaya \n");
-//            parseConstellation(current);
-//        }
-//              
-//        // recursively process each child node
-//        //hmmmm. this seems to do alot of extra work. hmmmmmmmmm.
-//        //not that much extra work? additionally, if we don't have /something/ here, we only get one branch of a thing.
-//        while ( iterator.hasNext() )
-//        {
-//            Element child = ( Element ) iterator.next();
-//            parseChildren( child, depth + 1 );
-//        }
-//    }
-//    
-//    //i dunno if this is gonna work so well.
-//    public static void parseConstellation(Element current)
-//    {
-//        // get children of current node
-//        List children = current.getChildren();
-//        Iterator iterator = children.iterator();
-//
-//        //for constellations        
-//        if(!iterator.hasNext()) //does this do what you think it does?
-//        {
-//            if(current.getName() == "name")
-//            {
-//
-//                System.out.print( "name: " + current.getName() +" = "+ current.getValue() +"\n");
-//            }
-//            else if(current.getName() == "abbr")
-//            {
-//
-//                System.out.print( "abbr: " + current.getName() +" = "+ current.getValue() +"\n");
-//            }
-//            else if(current.getName() == "line")
-//            {
-//                System.out.print( "line: " + current.getName() +" = "+ current.getValue() +"\n");
-//                
-//                //send current.getValue() to drawLine function
-//                String[] lines = current.getValue().split("\\s+");
-//
-//                //get xy of lines[0]
-//
-//                //get xy of lines[2]
-//
-//            }
-//        }
-//
-//        // recursively process each child node
-//        while ( iterator.hasNext() )
-//        {
-//            
-//            Element child = (Element)iterator.next();
-//            if(child.getName() == "constellation")
-//            {
-//                //huh. we never reach this.
-//                //huuuuh.
-//                System.out.print("exiting constellations \n");
-//                return;
-//            }
-//            parseConstellation(child);
-//        }
-//    }
-//    
-//    public static void parseStar(Element current)
-//    {
-//        // get children of current node
-//        List children = current.getChildren();
-//        Iterator iterator = children.iterator();
-//        
-//        //else if stars:
-//        if ( !iterator.hasNext() )
-//        {
-//            if(current.getName() == "HRnumber")
-//            {
-//                System.out.print( "hrnumber: " + current.getName() +" = "+ current.getValue() +"\n");
-//
-//            }
-//            else if(current.getName() == "name")
-//            {
-//                System.out.print( "name: " + current.getName() +" = "+ current.getValue() +"\n");
-//
-//            }
-//            else if(current.getName() == "constellation")
-//            {
-//                System.out.print( "constellation: " + current.getName() +" = "+ current.getValue() +"\n");
-//
-//            }
-//            else if(current.getName() == "ra")
-//            {
-//                System.out.print( "ra: " + current.getName() +" = "+ current.getValue() +"\n");
-//                
-//                String[] lines = current.getValue().split("\\s+");
-//                //lines.count ?= 3 //0,1 = int, 2 = float w/ 2 past dec
-//            }
-//            else if(current.getName() == "dec")
-//            {
-//                System.out.print( "dec: " + current.getName() +" = "+ current.getValue() +"\n");
-//                
-//                String[] lines = current.getValue().split("\\s+");
-//                //lines.count ?= 3
-//            }
-//            else if(current.getName() == "vmag")
-//            {
-//                System.out.print( "vmag: " + current.getName() +" = "+ current.getValue() +"\n");
-//
-//            }
-//            else if(current.getName() == "class")
-//            {
-//                System.out.print( "class: " + current.getName() +" = "+ current.getValue() +"\n");
-//
-//            }
-//            else if(current.getName() == "common_name")
-//            {
-//                System.out.print( "common_name: " + current.getName() +" = "+ current.getValue() +"\n");
-//
-//            }
-//        }
-//        
-//        // recursively process each child node
-//        while (iterator.hasNext())
-//        {
-//            Element child = (Element) iterator.next();
-//            if(child.getName() == "star")
-//                return;
-//            parseStar( child);
-//        }
-//    }
 }

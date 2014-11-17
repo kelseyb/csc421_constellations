@@ -33,8 +33,10 @@ public class xmlparser {
         
         //um,im not sure??
         //public Vector<int> ra;
+//        public Vector<Double> ra;
         public String ra;
         public String dec;
+//        public Vector<Double> dec;
         
         public double vmag;
         public String starClass;
@@ -239,15 +241,40 @@ public class xmlparser {
 //                System.out.print( "ra: " + current.getName() +" = "+ current.getValue() +"\n");
                 
                 String[] lines = current.getValue().split("\\s+");
+                System.out.println("ra:"+lines[0]+":"+lines[1]+":"+lines[2]+":"+lines[3]+";");
                 //lines.count ?= 3 //0,1 = int, 2 = float w/ 2 past dec
+                if(lines.length>3)
+                {
+                    //these dont work for some reason??
+//                tempStar.ra.add(Double.parseDouble(lines[1]));
+//                tempStar.ra.add(Double.parseDouble(lines[2]));
+//                tempStar.ra.add(Double.parseDouble(lines[3]));
+                }
+                else
+                {
+                    System.out.println("ra length wrong? something. wrong."+lines.length+":"+current.getValue());
+                }
+                
                 tempStar.ra = current.getValue();
             }
             else if(current.getName() == "dec")
             {
-//                System.out.print( "dec: " + current.getName() +" = "+ current.getValue() +"\n");
+                System.out.print( "dec: " + current.getName() +" = "+ current.getValue() +"\n");
                 
                 String[] lines = current.getValue().split("\\s+");
+//                System.out.println("dec:"+lines[0]+":"+lines[1]+":"+lines[2]+":"+lines[3]+";");
                 //lines.count ?= 3
+                if(lines.length>3)
+                {
+                    //dont work.
+//                tempStar.dec.add(Double.parseDouble(lines[1]));
+//                tempStar.dec.add(Double.parseDouble(lines[2]));
+//                tempStar.dec.add(Double.parseDouble(lines[3]));
+                }
+                else
+                {
+                    System.out.println("dec went wrong??:"+lines.length+":"+current.getValue());
+                }
                 tempStar.dec = current.getValue();
             }
             else if(current.getName() == "vmag")
