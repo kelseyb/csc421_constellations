@@ -43,12 +43,8 @@ public class xmlparser {
         public String name;
         public String starConstellation;
         
-        //um,im not sure??
-        //public Vector<int> ra;
-//        public Vector<Double> ra;
-        public String ra;
-        public String dec;
-//        public Vector<Double> dec;
+        public double ra;
+        public double dec;
         
         public double vmag;
         public String starClass;
@@ -61,10 +57,6 @@ public class xmlparser {
         private String name;
         private String abbr;
         
-//        public List<String> line = new ArrayList<String>();
-        
-        
-//        Vector [2] constellationSet;
         private Vector<String> fromStar;
         private Vector<String> toStar;
         
@@ -102,7 +94,6 @@ public class xmlparser {
         
         // read and parse XML document
         SAXBuilder builder = new SAXBuilder();
-//        String xml = "stars_mag4.xml";//"constellations.xml";
         try
         {
             Document doc = builder.build(xml);// args[0] );	// parse XML tags
@@ -132,20 +123,20 @@ public class xmlparser {
         if(current.getName() == "star")
         {
             isStar = true;
-            System.out.print( "   printing star yaya \n");
+//            System.out.print( "   printing star yaya \n");
             parseStar(current);
             
-            System.out.print("adding star to star list\n");
+//            System.out.print("adding star to star list\n");
             starList.add(tempStar);
-            System.out.println(tempStar.name+":"+tempStar.commonName+":"+tempStar.dec+":"+tempStar.ra+":"+tempStar.starClass+":"+tempStar.starConstellation+":"+tempStar.vmag+";;\n");
+//            System.out.println(tempStar.name+":"+tempStar.commonName+":"+tempStar.dec+":"+tempStar.ra+":"+tempStar.starClass+":"+tempStar.starConstellation+":"+tempStar.vmag+";;\n");
             
         }
         else if(current.getName() == "constellation" && isStar == false)
         {
-            System.out.print( "   printing constellation yaya \n");
+//            System.out.print( "   printing constellation yaya \n");
             parseConstellation(current);
             constellationList.add(tempConstellation);
-            System.out.println(tempConstellation.getName()+":"+tempConstellation.getAbbr()+":"+tempConstellation.getLineCount()+":"+tempConstellation.getStarSet(0)[0]+";;\n");
+//            System.out.println(tempConstellation.getName()+":"+tempConstellation.getAbbr()+":"+tempConstellation.getLineCount()+":"+tempConstellation.getStarSet(0)[0]+";;\n");
         }
               
         // recursively process each child node
@@ -167,27 +158,21 @@ public class xmlparser {
 
         
         //for constellations        
-        if(!iterator.hasNext()) //does this do what you think it does?
+        if(!iterator.hasNext())
         {
             if(current.getName() == "name")
             {
                 tempConstellation = new constellation(current.getValue());
-//                constellation t = new constellation(current.getValue());
-
 //                System.out.print( "name: " + current.getName() +" = "+ current.getValue() +"\n");
-//                constellationList[constellationList.size()-1] = current.getValue();
             }
             else if(current.getName() == "abbr")
             {
                 tempConstellation.setAbbr(current.getValue());
-
 //                System.out.print( "abbr: " + current.getName() +" = "+ current.getValue() +"\n");
             }
             else if(current.getName() == "line")
             {
 //                System.out.print( "line: " + current.getName() +" = "+ current.getValue() +"\n");
-                
-                //send current.getValue() to drawLine function
                 String[] lines = current.getValue().split("\\s+");
 
 //                System.out.print(lines[0] +":"+ lines[1]+":"+ lines[2]+":"+ lines[3] +"\n");
@@ -195,27 +180,13 @@ public class xmlparser {
             }
         }
         
-//        if(!iterator.hasNext())
-//        {
-//            constellationList.add(tempConstellation);
-//        }
-
         // recursively process each child node
         while ( iterator.hasNext() )
         {
-            
             Element child = (Element)iterator.next();
-            if(child.getName() == "constellation")
-            {
-                //huh. we never reach this.
-                //huuuuh.
-                System.out.print("exiting constellations \n");
-                return;
-            }
             parseConstellation(child);
         }
         
-        //huummm. could I not just put, add tempConstellation here? bit of reverse sort circuiting?
     }
     
     public static void parseStar(Element current)
@@ -224,7 +195,6 @@ public class xmlparser {
         List children = current.getChildren();
         Iterator iterator = children.iterator();
         
-        //else if stars:
         if ( !iterator.hasNext() )
         {
             if(current.getName() == "HRnumber")
@@ -248,43 +218,27 @@ public class xmlparser {
             else if(current.getName() == "ra")
             {
 //                System.out.print( "ra: " + current.getName() +" = "+ current.getValue() +"\n");
-                
                 String[] lines = current.getValue().split("\\s+");
-                System.out.println("ra:"+lines[0]+":"+lines[1]+":"+lines[2]+":"+lines[3]+";");
-                //lines.count ?= 3 //0,1 = int, 2 = float w/ 2 past dec
-                if(lines.length>3)
-                {
-                    //these dont work for some reason??
-//                tempStar.ra.add(Double.parseDouble(lines[1]));
-//                tempStar.ra.add(Double.parseDouble(lines[2]));
-//                tempStar.ra.add(Double.parseDouble(lines[3]));
-                }
-                else
-                {
-                    System.out.println("ra length wrong? something. wrong."+lines.length+":"+current.getValue());
-                }
+//                System.out.println("ra:"+lines[0]+":"+lines[1]+":"+lines[2]+":"+lines[3]+";");
                 
-                tempStar.ra = current.getValue();
+                double hr = Double.parseDouble(lines[1]);
+                double min = Double.parseDouble(lines[2]);
+                double sec = Double.parseDouble(lines[3]);
+                
+                tempStar.ra = Math.toRadians( ( hr + min / 60 + sec / 3600 ) * 15 );
             }
             else if(current.getName() == "dec")
             {
-                System.out.print( "dec: " + current.getName() +" = "+ current.getValue() +"\n");
-                
+//                System.out.print( "dec: " + current.getName() +" = "+ current.getValue() +"\n");
                 String[] lines = current.getValue().split("\\s+");
 //                System.out.println("dec:"+lines[0]+":"+lines[1]+":"+lines[2]+":"+lines[3]+";");
-                //lines.count ?= 3
-                if(lines.length>3)
-                {
-                    //dont work.
-//                tempStar.dec.add(Double.parseDouble(lines[1]));
-//                tempStar.dec.add(Double.parseDouble(lines[2]));
-//                tempStar.dec.add(Double.parseDouble(lines[3]));
-                }
-                else
-                {
-                    System.out.println("dec went wrong??:"+lines.length+":"+current.getValue());
-                }
-                tempStar.dec = current.getValue();
+                
+                double deg = Double.parseDouble(lines[1]);
+                double min = Double.parseDouble(lines[2]);
+                double sec = Double.parseDouble(lines[3]);
+                
+                tempStar.dec = Math.toRadians( Math.abs( deg ) + min / 60 + sec / 3600 );
+                if ( deg < 0 ) tempStar.dec = -tempStar.dec;
             }
             else if(current.getName() == "vmag")
             {
@@ -302,12 +256,6 @@ public class xmlparser {
                 tempStar.commonName = current.getValue();
             }
         }
-        
-//        if(!iterator.hasNext())
-//        {
-//            System.out.print("finished a star\n"); //okay, so. that doesn't work. 
-////            starList.add(tempStar); //how do i access things within starList? 
-//        }
         
         // recursively process each child node
         while (iterator.hasNext())
