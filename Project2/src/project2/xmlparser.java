@@ -21,9 +21,21 @@ public class xmlparser {
     public static List<star> starList = new ArrayList<star>();
     public static List<constellation> constellationList = new ArrayList<constellation>();
     
-    public static constellation tempConstellation;
-    public static star tempStar;
+    private static constellation tempConstellation;
+    private static star tempStar;
 
+    //empty constructor just parses a star file and the constellations file 
+    public xmlparser(){
+        generateStar("stars_mag4.xml");
+        generateStar("constellations.xml");
+    }
+    
+    public xmlparser(String[] xmlFiles){
+        for(String s : xmlFiles)
+        {
+            generateStar(s); 
+        }
+    }
     
     public static class star
     {
@@ -83,9 +95,6 @@ public class xmlparser {
     //possibly pass in star/constellation struct
     public static void generateStar(String xml)
     {
-//        List<star> starList = new ArrayList<star>();
-//        
-//        List<constellation> constellationList = new ArrayList<constellation>();
         //reset isStar
         isStar = false;
         
