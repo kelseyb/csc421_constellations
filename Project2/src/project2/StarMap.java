@@ -6,7 +6,7 @@ import java.awt.event.*;
 public class StarMap extends JFrame  {
 
     private Container contents; 
-    private boolean _showConstellations; 
+    private boolean _showConstellations = true; 
     private xmlparser _parser; 
     
     public StarMap(){

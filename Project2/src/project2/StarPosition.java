@@ -123,4 +123,25 @@ public class StarPosition {
             System.out.print( "    <= bad point, should be clipped!" );
         System.out.printf( "\n\n" );
     }
+    
+    public double GetPoint(double ra, double dec, double lat, double lon, double azi0, double alt0, GregorianCalendar date)
+    {
+        //double ra = Math.toRadians( ( ra_hr + ra_min / 60 + ra_sec / 3600 ) * 15 );
+        //double dec = Math.toRadians( Math.abs( dec_deg ) + dec_min / 60 + dec_sec / 3600 );
+        //if ( dec_deg < 0 ) dec = -dec;
+
+        // compute alt/azi of star
+        alt_azi( ra, dec, lat, lon );
+
+        azi0 = Math.toRadians( azi0 ); 
+        alt0 = Math.toRadians( alt0 );
+
+        // project star's (alt,azi) position on sphere to (x,y) coordinate on viewing window
+        double R = 1.0;		// distance to star: assume all stars are located on sphere of radius 1
+        double x = R * Math.cos( alt ) * Math.sin( azi - azi0 );
+        double y = R * ( Math.cos( alt0 ) * Math.sin( alt ) - Math.sin( alt0 ) * Math.cos( alt ) * Math.cos( azi - azi0 ) );
+        return x; 
+        
+    }
+    
 }
