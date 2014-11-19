@@ -20,6 +20,7 @@ public class xmlparser {
         
     public static List<star> starList = new ArrayList<star>();
     public static List<constellation> constellationList = new ArrayList<constellation>();
+    public static Map<String, Integer> starMap = new HashMap<String, Integer>(); 
     
     private static constellation tempConstellation;
     private static star tempStar;
@@ -28,7 +29,10 @@ public class xmlparser {
     public xmlparser(){
         generateStar("stars.xml");
         generateStar("constellations.xml");
-        Collections.sort(starList);
+        for (int i = 0; i < starList.size(); i++)
+        {
+            starMap.put(starList.get(i).name, i);
+        }
     }
     
     public xmlparser(String[] xmlFiles){
@@ -235,7 +239,7 @@ public class xmlparser {
             else if(current.getName() == "constellation")
             {
 //                System.out.print( "constellation: " + current.getName() +" = "+ current.getValue() +"\n");
-                tempStar.name = current.getValue();
+                tempStar.starConstellation = current.getValue();
             }
             else if(current.getName() == "ra")
             {
@@ -305,29 +309,5 @@ public class xmlparser {
                 return;
             parseStar(child);
         }
-    }
-    
-    public int findStar(String name)
-    {
-        int min = 0, max = starList.size(), mid;
-        
-        while (max >= min)
-        {
-            mid = (max - min) / 2; 
-            String midpoint = starList.get(mid).name; 
-            if (midpoint.equals(name))
-            {
-                return mid; 
-            }
-            else if (midpoint.compareTo(name) < 0)
-            {
-                min = mid + 1; 
-            }
-            else
-            {
-                max = mid - 1; 
-            }
-        }
-        return -1;     
     }
 }

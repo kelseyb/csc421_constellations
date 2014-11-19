@@ -23,8 +23,9 @@ public class StarMap extends JFrame {
         _parser = new xmlparser(); 
         _position = new StarPosition(); 
         
-        for (star s : _parser.starList)
+        for (int i = 0; i < _parser.starList.size(); i++)
         {
+            star s = _parser.starList.get(i);
             if (s.starConstellation != null)
             {
                 s.hasConstellation = true;
@@ -73,6 +74,18 @@ public class StarMap extends JFrame {
         });
         menu.add(menuItem); 
         
+        menuItem = new JMenuItem ("Zoom In");
+        menuItem.addActionListener(new ActionListener(){
+            public void actionPerformed (ActionEvent ae) {zoomIn(1);}
+        });
+        menu.add(menuItem);
+        
+        menuItem = new JMenuItem ("Zoom Out");
+        menuItem.addActionListener(new ActionListener(){
+            public void actionPerformed (ActionEvent ae) {zoomIn(-1);}
+        });
+        menu.add(menuItem);
+        
         //set the menubar to our menu bar 
         setJMenuBar(menuBar); 
         
@@ -94,6 +107,25 @@ public class StarMap extends JFrame {
     private void changeVisualMagnitude(){
         _minMagnitude = 10; 
     }
+    
+    private void zoomIn(int i){
+        _scrollAmount += i; 
+        if (_scrollAmount == 0)
+        {
+            scrollScale = 1; 
+        }
+        else if (_scrollAmount < 0)
+        {
+            scrollScale =  (_scrollAmount + 8 ) * .125;
+        }
+        else
+        {
+            scrollScale =  8.0 / (- _scrollAmount + 8.0); 
+        }
+        repaint();
+    }
+        
+        
    
 // drawing panel class
 class DrawingPane extends JPanel
@@ -234,39 +266,45 @@ class DrawingPane extends JPanel
                 s.isVisible = false; 
             }
         }
-//        if (_showConstellations)
-//        {
-//            int j, k; 
-//            int px1, px2, py1, py2; 
-//            for(constellation c : _parser.constellationList)
-//            {
-//                for (int i = 0; i < c.getLineCount(); i++)
-//                {
-//                    String[] names = c.getStarSet(i);
-//                    j = _parser.findStar(names[0]); 
-//                    k = _parser.findStar(names[1]); 
-//                    if (j != -1 && k != -1)
-//                    {
-//                        star s = _parser.starList.get(j); 
-//                        _position.GetPoint(s.ra, s.dec, lat, lon, azi, alt, cal);
-//                        px1 = (int)((_position.X + 1 ) * scrollScale * d.width/2) + shift; 
-//                        py1 = d.height - (int)((_position.Y ) * scrollScale * d.height); 
-//                        if (_position.Clipped == false && s.isVisible == true)
-//                        {
-//                            s = _parser.starList.get(k); 
-//                            _position.GetPoint(s.ra, s.dec, lat, lon, azi, alt, cal);
-//                            px2 = (int)((_position.X + 1 ) * scrollScale * d.width/2) + shift; 
-//                            py2 = d.height - (int)((_position.Y ) * scrollScale * d.height);
-//
-//                            if (_position.Clipped == false && s.isVisible == true)
-//                            {
-//                                g.drawLine(px1, py1, px2, py2);
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//        }
+        if (_showConstellations)
+        {
+            int j = -1 , k = -1; 
+            int px1, px2, py1, py2; 
+            for(constellation c : _parser.constellationList)
+            {
+                for (int i = 0; i < c.getLineCount(); i++)
+                {
+                    j = -1; 
+                    k = -1; 
+                    String[] names = c.getStarSet(i);
+                    if (_parser.starMap.containsKey(names[0]))
+                        j = _parser.starMap.get(names[0]);
+                    if (_parser.starMap.containsKey(names[1]))
+                        k = _parser.starMap.get(names[1]); 
+
+                    if (j != -1 && k != -1)
+                    {
+                        star s = _parser.starList.get(j); 
+                        _position.GetPoint(s.ra, s.dec, lat, lon, azi, alt, cal);
+                        px1 = (int)((_position.X + 1 ) * scrollScale * d.width/2) + shift; 
+                        py1 = d.height - (int)((_position.Y ) * scrollScale * d.height); 
+
+                        if (_position.Clipped == false && s.isVisible == true)
+                        {
+                            s = _parser.starList.get(k); 
+                            _position.GetPoint(s.ra, s.dec, lat, lon, azi, alt, cal);
+                            px2 = (int)((_position.X + 1 ) * scrollScale * d.width/2) + shift; 
+                            py2 = d.height - (int)((_position.Y ) * scrollScale * d.height);
+
+                            if (_position.Clipped == false && s.isVisible == true)
+                            {
+                                g.drawLine(px1, py1, px2, py2);
+                            }
+                        }
+                    }
+                }
+            }
+        }
         if (isDragging)
         {
             //change it back if necessary. 
