@@ -4,6 +4,9 @@ import java.awt.event.*;
 import java.util.*; 
 import javax.swing.*;
 import project2.xmlparser.*;
+import java.text.DecimalFormat;
+import javax.swing.text.NumberFormatter;
+import java.text.NumberFormat;
 
 public class StarMap extends JFrame {
     private Container contents; 
@@ -15,6 +18,9 @@ public class StarMap extends JFrame {
     private double scrollScale = 1;
     private double lat = 44.08, lon = -103.23, azi = 0, alt = 20; 
     private GregorianCalendar cal = new GregorianCalendar(2014, 11, 18, 9, 0, 0);
+    
+//    private JFrame myframe; // instance variable of a JFrame
+//    private JDialog mydialog; //do these have to be here?
     
     public StarMap(){
         super("Star Map");  
@@ -98,6 +104,33 @@ public class StarMap extends JFrame {
     private void changeLocation(){
         _scrollAmount = 0; 
         scrollScale = 1; 
+        
+        JFrame myframe = new JFrame();
+        myframe.setTitle("Change Location and Date");
+        myframe.setSize(new Dimension(400, 200));
+        myframe.getContentPane().setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+        
+        JFormattedTextField dateTextField = new JFormattedTextField(GregorianCalendar.getInstance().getTime());
+                
+        JLabel dateLabel = new JLabel("Set Date: ");
+        dateLabel.setLabelFor(dateTextField);
+        
+        JButton btnApply = new JButton("Apply");
+        btnApply.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) { 
+                cal.setTime((Date)dateTextField.getValue());
+                System.out.println(cal);
+                myframe.dispose();
+            }
+        });
+        
+        myframe.getContentPane().add(dateLabel);
+        myframe.getContentPane().add(dateTextField);
+        myframe.getContentPane().add(btnApply);
+
+        myframe.setVisible(true);
     }
     
     private void toggleConstellations(){
@@ -106,6 +139,60 @@ public class StarMap extends JFrame {
     
     private void changeVisualMagnitude(){
         _minMagnitude = 10; 
+        
+                JFrame myframe = new JFrame();
+        myframe.setTitle("Change Location and Date");
+        myframe.setSize(new Dimension(400, 75));
+        myframe.getContentPane().setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+        
+//        DecimalFormat format = DecimalFormat.
+//        DecimalFormat format = new DecimalFormat("#.##"); //yes?
+//        NumberFormat f = new NumberFormat();
+//
+        //this isn't really working.
+        NumberFormatter formatter = new NumberFormatter(new DecimalFormat("#.##")); //this isn't working?
+//        formatter.setValueClass(Double.class); //optional, ensures you will always get a long value
+        formatter.setAllowsInvalid(false);
+        formatter.setMinimum(-2);
+//        formatter.setMaximum(6);
+
+//        JFormattedTextField field = new JFormattedTextField(formatter);
+        
+        JFormattedTextField minTextField = new JFormattedTextField(formatter);
+        minTextField.setPreferredSize(new Dimension(50,20)); 
+//        JFormattedTextField maxTextField = new JFormattedTextField(formatter);
+        
+        //set min and max fields to current magnitudes.
+        minTextField.setText("6.00"); //or something
+//        maxTextField.setText("6.00");
+//        minTextField.setValue(lon);
+                
+        JLabel minLabel = new JLabel("Minimum Magnitude: ");
+        minLabel.setLabelFor(minTextField);
+        
+//        JLabel maxLabel = new JLabel("Maximum Magnitude: ");
+//        maxLabel.setLabelFor(maxTextField);
+        
+        JButton btnApply = new JButton("Apply");
+        btnApply.addActionListener(new ActionListener() {
+
+            @Override
+            public void actionPerformed(ActionEvent e) { 
+
+                _minMagnitude = (int)minTextField.getValue(); //cant be double? thinks its lossy?
+                System.out.println(_minMagnitude);
+                myframe.dispose();
+                
+            }
+        });
+        
+        myframe.getContentPane().add(minLabel);
+        myframe.getContentPane().add(minTextField);
+//        myframe.getContentPane().add(maxLabel);
+//        myframe.getContentPane().add(maxTextField);
+        myframe.getContentPane().add(btnApply);
+
+        myframe.setVisible(true);
     }
     
     private void zoomIn(int i){
