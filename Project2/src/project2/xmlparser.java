@@ -26,8 +26,9 @@ public class xmlparser {
 
     //empty constructor just parses a star file and the constellations file 
     public xmlparser(){
-        generateStar("stars_mag4.xml");
+        generateStar("stars.xml");
         generateStar("constellations.xml");
+        Collections.sort(starList);
     }
     
     public xmlparser(String[] xmlFiles){
@@ -37,7 +38,7 @@ public class xmlparser {
         }
     }
     
-    public static class star
+    public static class star implements Comparable
     {
         public double hrnumber;
         public String name;
@@ -49,6 +50,27 @@ public class xmlparser {
         public double vmag;
         public String starClass;
         public String commonName;
+        public boolean isVisible = false; 
+        public boolean hasConstellation; 
+        
+        public int compareTo(star comp)
+        {
+            return name.compareTo(comp.name); 
+        }
+        
+        public int compareTo(String s)
+        {
+            return name.compareTo(s); 
+        }
+
+        @Override
+        public int compareTo(Object t) {
+            if ( !( t instanceof star ) )
+                throw new ClassCastException( "Incompatible data type: " + t + " (not a star object)" );
+            
+            star s = (star) t; 
+            return this.compareTo(s.name);
+        }
     
     };
     
@@ -199,7 +221,7 @@ public class xmlparser {
         {
             if(current.getName() == "HRnumber")
             {
-                System.out.print("new star?\n");
+//                System.out.print("new star?\n");
 //                System.out.print( "hrnumber: " + current.getName() +" = "+ current.getValue() +"\n");
                 tempStar = new star();
                 double t = Double.parseDouble(current.getValue().toString());
@@ -217,13 +239,21 @@ public class xmlparser {
             }
             else if(current.getName() == "ra")
             {
-//                System.out.print( "ra: " + current.getName() +" = "+ current.getValue() +"\n");
                 String[] lines = current.getValue().split("\\s+");
-//                System.out.println("ra:"+lines[0]+":"+lines[1]+":"+lines[2]+":"+lines[3]+";");
+                double hr = 0, min = 0, sec = 0; 
                 
-                double hr = Double.parseDouble(lines[1]);
-                double min = Double.parseDouble(lines[2]);
-                double sec = Double.parseDouble(lines[3]);
+                if (lines.length >= 1)
+                {
+                    hr = Double.parseDouble(lines[0]);
+                }
+                if (lines.length >= 2)
+                {
+                    min = Double.parseDouble(lines[1]);
+                }
+                if (lines.length >= 3)
+                {
+                    sec = Double.parseDouble(lines[2]);
+                }
                 
                 tempStar.ra = Math.toRadians( ( hr + min / 60 + sec / 3600 ) * 15 );
             }
@@ -233,9 +263,19 @@ public class xmlparser {
                 String[] lines = current.getValue().split("\\s+");
 //                System.out.println("dec:"+lines[0]+":"+lines[1]+":"+lines[2]+":"+lines[3]+";");
                 
-                double deg = Double.parseDouble(lines[1]);
-                double min = Double.parseDouble(lines[2]);
-                double sec = Double.parseDouble(lines[3]);
+                double deg = 0, min = 0, sec = 0; 
+                if (lines.length >= 1)
+                {
+                    deg = Double.parseDouble(lines[0]);
+                }
+                if (lines.length >= 2)
+                {
+                    min = Double.parseDouble(lines[1]);
+                }
+                if (lines.length >= 3)
+                {
+                    sec = Double.parseDouble(lines[2]);
+                }
                 
                 tempStar.dec = Math.toRadians( Math.abs( deg ) + min / 60 + sec / 3600 );
                 if ( deg < 0 ) tempStar.dec = -tempStar.dec;
@@ -265,5 +305,29 @@ public class xmlparser {
                 return;
             parseStar(child);
         }
+    }
+    
+    public int findStar(String name)
+    {
+        int min = 0, max = starList.size(), mid;
+        
+        while (max >= min)
+        {
+            mid = (max - min) / 2; 
+            String midpoint = starList.get(mid).name; 
+            if (midpoint.equals(name))
+            {
+                return mid; 
+            }
+            else if (midpoint.compareTo(name) < 0)
+            {
+                min = mid + 1; 
+            }
+            else
+            {
+                max = mid - 1; 
+            }
+        }
+        return -1;     
     }
 }
