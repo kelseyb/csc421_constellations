@@ -13,7 +13,7 @@ public class StarMap extends JFrame {
     private boolean _showConstellations = true; 
     private xmlparser _parser; 
     private StarPosition _position; 
-    private int _minMagnitude = 10;
+    private double _minMagnitude = 10;
     private int _scrollAmount = 0;
     private double scrollScale = 1;
     private double lat = 44.08, lon = -103.23, azi = 0, alt = 20; 
@@ -28,19 +28,6 @@ public class StarMap extends JFrame {
         //parse the xml files
         _parser = new xmlparser(); 
         _position = new StarPosition(); 
-        
-        for (int i = 0; i < _parser.starList.size(); i++)
-        {
-            star s = _parser.starList.get(i);
-            if (s.starConstellation != null)
-            {
-                s.hasConstellation = true;
-            }
-            else 
-            {
-                s.hasConstellation = false; 
-            }
-        }
         
         //add a file menu
         JMenuBar menuBar = new JMenuBar(); 
@@ -135,12 +122,13 @@ public class StarMap extends JFrame {
     
     private void toggleConstellations(){
         _showConstellations = !_showConstellations; 
+        repaint(); 
     }
     
     private void changeVisualMagnitude(){
         _minMagnitude = 10; 
         
-                JFrame myframe = new JFrame();
+        JFrame myframe = new JFrame();
         myframe.setTitle("Change Location and Date");
         myframe.setSize(new Dimension(400, 75));
         myframe.getContentPane().setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
@@ -159,13 +147,10 @@ public class StarMap extends JFrame {
 //        JFormattedTextField field = new JFormattedTextField(formatter);
         
         JFormattedTextField minTextField = new JFormattedTextField(formatter);
-        minTextField.setPreferredSize(new Dimension(50,20)); 
-//        JFormattedTextField maxTextField = new JFormattedTextField(formatter);
+        minTextField.setPreferredSize(new Dimension(50,20)); ;
         
         //set min and max fields to current magnitudes.
         minTextField.setText("6.00"); //or something
-//        maxTextField.setText("6.00");
-//        minTextField.setValue(lon);
                 
         JLabel minLabel = new JLabel("Minimum Magnitude: ");
         minLabel.setLabelFor(minTextField);
@@ -179,6 +164,7 @@ public class StarMap extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) { 
 
+                
                 _minMagnitude = (int)minTextField.getValue(); //cant be double? thinks its lossy?
                 System.out.println(_minMagnitude);
                 myframe.dispose();
@@ -193,6 +179,7 @@ public class StarMap extends JFrame {
         myframe.getContentPane().add(btnApply);
 
         myframe.setVisible(true);
+        repaint(); 
     }
     
     private void zoomIn(int i){
@@ -219,7 +206,8 @@ class DrawingPane extends JPanel
 {
     private int x1 = 0, x2 = 0;
     private int y1 = 0, y2 = 0; 
-    private boolean isDragging;  
+    private boolean isDragging;
+    private int currentStar; 
     
     
     // constructor
@@ -272,7 +260,45 @@ class DrawingPane extends JPanel
                 y2 = e.getY(); 
                 repaint();
             }
-        } );
+        });
+                
+        addMouseMotionListener( new MouseAdapter()
+        {
+            
+            public void mouseMoved (MouseEvent e)
+            {
+                Dimension d = getSize(); 
+                int currentGuess = -1; 
+                double dist = 0;
+                double min_dist = 100000; 
+                int shift = (int)(d.width/ 2 - scrollScale * d.width / 2); 
+                
+                for (star s: _parser.starList)
+                {
+                    //calculate the point 
+                    _position.GetPoint(s.ra, s.dec, lat, lon, azi, alt, cal); 
+            
+                    //draw the star if the star is not clipped. 
+                    if (_position.Clipped == false && s.vmag <= _minMagnitude)
+                    {
+                        //find the position of the star
+                        int px1 = (int)((_position.X + 1 ) * scrollScale * d.width/2) + shift; 
+                        int py1 = d.height - (int)((_position.Y ) * scrollScale * d.height) ;
+                        dist = (px1 - e.getX()) * (px1 - e.getX()) + (py1 - e.getY()) * (py1 - e.getY()); 
+                        if (dist < min_dist && dist < 16)
+                        {
+                            min_dist = dist; 
+                            currentGuess = _parser.starList.indexOf(s); 
+                        }
+                    }
+                }
+                if (currentGuess != -1)
+                {
+                    currentStar = currentGuess; 
+                    System.out.printf(_parser.starList.get(currentStar).name + " \n"); 
+                }
+            }
+        });
         
         addMouseWheelListener((MouseWheelEvent e)-> 
         {
@@ -293,6 +319,7 @@ class DrawingPane extends JPanel
             }
             repaint(); 
         });
+        
     }
 
     // start with 800x600 canvas
@@ -306,9 +333,8 @@ class DrawingPane extends JPanel
     {
 	// redraw filled oval and latest rubberbanded rectangle
         super.paintComponent( g );		// clear drawing canvas
-
-        Dimension d = this.getSize();
         double temp1 = 0, temp2 = 0; 
+        Dimension d = this.getSize();
         
         if (isDragging)
         {
@@ -327,9 +353,22 @@ class DrawingPane extends JPanel
             }
         }
         
+        DrawStar(g);
+        DrawConstellations(g); 
+        
+        if (isDragging)
+        {
+            //change it back if necessary. 
+            azi = temp1; 
+            alt = temp2; 
+        }
+    }
+    
+    private void DrawStar(Graphics g)
+    {
+        Dimension d = this.getSize();
         int shift =(int)(d.width/ 2 - scrollScale * d.width / 2); 
         
-        //what i need to draw
         for (star s: _parser.starList)
         {
             //calculate the point 
@@ -346,44 +385,60 @@ class DrawingPane extends JPanel
                 g.setColor(Color.yellow);
                 //draw the star (should be circle) 
                 g.fillOval(px1, py1, (int)(2* radius), (int)(2* radius));
-                s.isVisible = true; 
-            }
-            else 
-            {
-                s.isVisible = false; 
             }
         }
+    }
+    
+    private void DrawConstellations(Graphics g)
+    {
+        Dimension d = this.getSize();
+        int shift =(int)(d.width/ 2 - scrollScale * d.width / 2); 
+        
         if (_showConstellations)
         {
-            int j = -1 , k = -1; 
+            int j, k; 
             int px1, px2, py1, py2; 
             for(constellation c : _parser.constellationList)
             {
+                //go through each line in the constellation draw it. 
                 for (int i = 0; i < c.getLineCount(); i++)
                 {
                     j = -1; 
                     k = -1; 
                     String[] names = c.getStarSet(i);
+                    //prepare the map string (name of the star - constellations abbr.)
+                    for (int n = 0; n < names.length; n++)
+                    {
+                        names[n] = names[n] + "-" + c.getAbbr(); 
+                    }
+                    //find the index of the star if it is in the list
                     if (_parser.starMap.containsKey(names[0]))
                         j = _parser.starMap.get(names[0]);
                     if (_parser.starMap.containsKey(names[1]))
                         k = _parser.starMap.get(names[1]); 
 
+                    //if both were found draw it
                     if (j != -1 && k != -1)
                     {
+                        //find the point of the first star
                         star s = _parser.starList.get(j); 
+                        double radius = (8 - s.vmag)/2; 
                         _position.GetPoint(s.ra, s.dec, lat, lon, azi, alt, cal);
                         px1 = (int)((_position.X + 1 ) * scrollScale * d.width/2) + shift; 
-                        py1 = d.height - (int)((_position.Y ) * scrollScale * d.height); 
+                        py1 = d.height - (int)((_position.Y ) * scrollScale * d.height - radius - 1); 
 
-                        if (_position.Clipped == false && s.isVisible == true)
+                        //if it is on screen move to the next star 
+                        if (_position.Clipped == false)
                         {
+                            //find the point the second star
                             s = _parser.starList.get(k); 
+                            radius = (8 - s.vmag)/2;
                             _position.GetPoint(s.ra, s.dec, lat, lon, azi, alt, cal);
                             px2 = (int)((_position.X + 1 ) * scrollScale * d.width/2) + shift; 
-                            py2 = d.height - (int)((_position.Y ) * scrollScale * d.height);
+                            py2 = d.height - (int)((_position.Y ) * scrollScale * d.height - radius - 1);
 
-                            if (_position.Clipped == false && s.isVisible == true)
+                            //if it is on screen draw the line. 
+                            if (_position.Clipped == false)
                             {
                                 g.drawLine(px1, py1, px2, py2);
                             }
@@ -391,12 +446,6 @@ class DrawingPane extends JPanel
                     }
                 }
             }
-        }
-        if (isDragging)
-        {
-            //change it back if necessary. 
-            azi = temp1; 
-            alt = temp2; 
         }
     }
 

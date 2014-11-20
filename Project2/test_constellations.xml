@@ -1,0 +1,24 @@
+<xml>
+    <constellation>
+        <name> Ursa Major </name> 
+        <abbr> UMa </abbr> 
+        <line> Alkaid to Mizar </line> 
+        <line> Mizar to Alioth </line> 
+        <line> Alioth to Megrez </line> 
+        <line> Megrez to Phecda </line> 
+        <line> Phecda to Merak </line> 
+        <line> Merak to Dubhe </line> 
+        <line> Megrez to Dubhe </line> 
+        <line> Dubhe to 23 </line> 
+        <line> 23 to 1Omi </line> 
+        <line> 23 to 29Ups </line> 
+        <line> 30Phi to 29Ups </line> 
+        <line> 30Phi to 33Lam </line> 
+        <line> 1Omi to Talitha </line> 
+        <line> 12Kap to 34Mu </line> 
+        <line> 34Mu to 54Nu </line> 
+        <line> 52Psi to 54Nu </line> 
+        <line> 63Chi to 52Psi </line> 
+        <line> 63Chi to Alkaid </line> 
+    </constellation>
+</xml>

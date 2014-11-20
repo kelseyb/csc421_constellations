@@ -31,7 +31,11 @@ public class xmlparser {
         generateStar("constellations.xml");
         for (int i = 0; i < starList.size(); i++)
         {
-            starMap.put(starList.get(i).name, i);
+            starMap.put(starList.get(i).name + "-" + starList.get(i).starConstellation, i);
+            if (starList.get(i).commonName != null)
+            {
+                starMap.put(starList.get(i).commonName + "-" + starList.get(i).starConstellation, i);
+            }
         }
     }
     
@@ -55,7 +59,6 @@ public class xmlparser {
         public String starClass;
         public String commonName;
         public boolean isVisible = false; 
-        public boolean hasConstellation; 
         
         public int compareTo(star comp)
         {
@@ -193,7 +196,7 @@ public class xmlparser {
             }
             else if(current.getName() == "abbr")
             {
-                tempConstellation.setAbbr(current.getValue());
+                tempConstellation.setAbbr(current.getValue().replaceAll("\\s+",""));
 //                System.out.print( "abbr: " + current.getName() +" = "+ current.getValue() +"\n");
             }
             else if(current.getName() == "line")
@@ -234,12 +237,12 @@ public class xmlparser {
             else if(current.getName() == "name")
             {
 //                System.out.print( "name: " + current.getName() +" = "+ current.getValue() +"\n");
-                tempStar.name = current.getValue();
+                tempStar.name = current.getValue().replaceAll("\\s+","");
             }
             else if(current.getName() == "constellation")
             {
 //                System.out.print( "constellation: " + current.getName() +" = "+ current.getValue() +"\n");
-                tempStar.starConstellation = current.getValue();
+                tempStar.starConstellation = current.getValue().replaceAll("\\s+","");
             }
             else if(current.getName() == "ra")
             {

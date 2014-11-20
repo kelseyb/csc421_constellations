@@ -1,0 +1,173 @@
+<xml>
+<star>
+<HRnumber>5191</HRnumber>
+<name>85Eta</name>
+<constellation>UMa</constellation>
+<ra>13 47 32.40</ra>
+<dec>49 18 47.90</dec>
+<vmag>1.86</vmag>
+<class>B3V</class>
+<common_name>Alkaid</common_name>
+</star>
+<star>
+<HRnumber>3594</HRnumber>
+<name>12Kap</name>
+<constellation>UMa</constellation>
+<ra>9 3 37.49</ra>
+<dec>47 9 24.10</dec>
+<vmag>3.60</vmag>
+<class>A1V</class>
+</star>
+<star>
+<HRnumber>8762</HRnumber>
+<name>1Omi</name>
+<constellation>And</constellation>
+<ra>23 1 55.30</ra>
+<dec>42 19 34.00</dec>
+<vmag>3.62</vmag>
+<class>B6III</class>
+</star>
+<star>
+<HRnumber>3757</HRnumber>
+<name>23</name>
+<constellation>UMa</constellation>
+<ra>9 31 31.70</ra>
+<dec>63 3 42.80</dec>
+<vmag>3.67</vmag>
+<class>F0IV</class>
+</star>
+<star>
+<HRnumber>3888</HRnumber>
+<name>29Ups</name>
+<constellation>UMa</constellation>
+<ra>9 50 59.40</ra>
+<dec>59 2 19.00</dec>
+<vmag>3.80</vmag>
+<class>F2IV</class>
+</star>
+<star>
+<HRnumber>3894</HRnumber>
+<name>30Phi</name>
+<constellation>UMa</constellation>
+<ra>9 52 6.41</ra>
+<dec>54 3 51.80</dec>
+<vmag>4.59</vmag>
+<class>A3IV</class>
+</star>
+<star>
+<HRnumber>4033</HRnumber>
+<name>33Lam</name>
+<constellation>UMa</constellation>
+<ra>10 17 5.81</ra>
+<dec>42 54 51.80</dec>
+<vmag>3.45</vmag>
+<class>A2IV</class>
+</star>
+<star>
+<HRnumber>4069</HRnumber>
+<name>34Mu</name>
+<constellation>UMa</constellation>
+<ra>10 22 19.70</ra>
+<dec>41 29 57.80</dec>
+<vmag>3.05</vmag>
+<class>M0III</class>
+</star>
+<star>
+<HRnumber>2420</HRnumber>
+<name>52Psi3</name>
+<constellation>Aur</constellation>
+<ra>6 38 49.20</ra>
+<dec>39 54 9.00</dec>
+<vmag>5.20</vmag>
+<class>B8III</class>
+</star>
+<star>
+<HRnumber>4377</HRnumber>
+<name>54Nu</name>
+<constellation>UMa</constellation>
+<ra>11 18 28.70</ra>
+<dec>33 5 39.10</dec>
+<vmag>3.48</vmag>
+<class>K3III</class>
+</star>
+<star>
+<HRnumber>4518</HRnumber>
+<name>63Chi</name>
+<constellation>UMa</constellation>
+<ra>11 46 3.00</ra>
+<dec>47 46 45.80</dec>
+<vmag>3.71</vmag>
+<class>K0III</class>
+</star>
+<star>
+<HRnumber>4905</HRnumber>
+<name>77Eps</name>
+<constellation>UMa</constellation>
+<ra>12 54 1.70</ra>
+<dec>55 57 34.90</dec>
+<vmag>1.77</vmag>
+<class>A0</class>
+<common_name>Alioth</common_name>
+</star>
+<star>
+<HRnumber>4301</HRnumber>
+<name>50Alp</name>
+<constellation>UMa</constellation>
+<ra>11 3 43.70</ra>
+<dec>61 45 2.90</dec>
+<vmag>1.79</vmag>
+<class>K0III</class>
+<common_name>Dubhe</common_name>
+</star>
+<star>
+<HRnumber>4660</HRnumber>
+<name>69Del</name>
+<constellation>UMa</constellation>
+<ra>12 15 25.61</ra>
+<dec>57 1 57.00</dec>
+<vmag>3.31</vmag>
+<class>A3V</class>
+<common_name>Megrez</common_name>
+</star>
+<star>
+<HRnumber>4295</HRnumber>
+<name>48Bet</name>
+<constellation>UMa</constellation>
+<ra>11 1 50.50</ra>
+<dec>56 22 57.00</dec>
+<vmag>2.37</vmag>
+<class>A1V</class>
+<common_name>Merak</common_name>
+</star>
+<star>
+<HRnumber>5054</HRnumber>
+<name>79Zet</name>
+<constellation>UMa</constellation>
+<ra>13 23 55.49</ra>
+<dec>54 55 31.10</dec>
+<vmag>2.27</vmag>
+<class>A1V</class>
+<common_name>Mizar</common_name>
+</star>
+<star>
+<HRnumber>4554</HRnumber>
+<name>64Gam</name>
+<constellation>UMa</constellation>
+<ra>11 53 49.80</ra>
+<dec>53 41 40.90</dec>
+<vmag>2.44</vmag>
+<class>A0V</class>
+<common_name>Phecda</common_name>
+</star>
+<star>
+<HRnumber>3569</HRnumber>
+<name>9Iot</name>
+<constellation>UMa</constellation>
+<ra>8 59 12.41</ra>
+<dec>48 2 30.10</dec>
+<vmag>3.14</vmag>
+<class>A7IV</class>
+<common_name>Talitha</common_name>
+</star>
+
+</xml>
