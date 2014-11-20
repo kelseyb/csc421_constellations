@@ -115,6 +115,24 @@ public class StarMap extends JFrame {
         JLabel dateLabel = new JLabel("Set Date: ");
         dateLabel.setLabelFor(dateTextField);
         
+        //90 to -90 and 180 and -180
+        JSlider latSlider = new JSlider(-90, 90, (int)lat);
+        latSlider.setMajorTickSpacing(10);
+        latSlider.setMinorTickSpacing(5);
+        latSlider.setPaintTicks(true);
+        latSlider.setPaintLabels(true);
+        
+        JSlider lonSlider = new JSlider(-180, 180, (int)lon);
+        lonSlider.setMajorTickSpacing(20);
+        lonSlider.setMinorTickSpacing(5);
+        lonSlider.setPaintTicks(true);
+        lonSlider.setPaintLabels(true);
+        
+        JLabel latLabel = new JLabel("Latidute: ");
+        latLabel.setLabelFor(latSlider);
+        JLabel lonLabel = new JLabel("Longitude: ");
+        lonLabel.setLabelFor(lonSlider);
+        
         JButton btnApply = new JButton("Apply");
         btnApply.addActionListener(new ActionListener() {
 
@@ -122,12 +140,19 @@ public class StarMap extends JFrame {
             public void actionPerformed(ActionEvent e) { 
                 cal.setTime((Date)dateTextField.getValue());
                 System.out.println(cal);
+                repaint();
                 myframe.dispose();
             }
         });
         
         myframe.getContentPane().add(dateLabel);
         myframe.getContentPane().add(dateTextField);
+        
+        myframe.getContentPane().add(latLabel);
+        myframe.getContentPane().add(latSlider);
+        myframe.getContentPane().add(lonLabel);
+        myframe.getContentPane().add(lonSlider);
+        
         myframe.getContentPane().add(btnApply);
 
         myframe.setVisible(true);
@@ -138,40 +163,24 @@ public class StarMap extends JFrame {
     }
     
     private void changeVisualMagnitude(){
-        _minMagnitude = 10; 
+//        _minMagnitude = 10; 
         
-                JFrame myframe = new JFrame();
-        myframe.setTitle("Change Location and Date");
-        myframe.setSize(new Dimension(400, 75));
+        JFrame myframe = new JFrame();
+        myframe.setTitle("Change Visual Magnitude");
+        myframe.setSize(new Dimension(400, 150));
         myframe.getContentPane().setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
         
-//        DecimalFormat format = DecimalFormat.
-//        DecimalFormat format = new DecimalFormat("#.##"); //yes?
-//        NumberFormat f = new NumberFormat();
-//
-        //this isn't really working.
-        NumberFormatter formatter = new NumberFormatter(new DecimalFormat("#.##")); //this isn't working?
-//        formatter.setValueClass(Double.class); //optional, ensures you will always get a long value
-        formatter.setAllowsInvalid(false);
-        formatter.setMinimum(-2);
-//        formatter.setMaximum(6);
-
-//        JFormattedTextField field = new JFormattedTextField(formatter);
+        if(_minMagnitude == 10)
+            _minMagnitude = 6;
         
-        JFormattedTextField minTextField = new JFormattedTextField(formatter);
-        minTextField.setPreferredSize(new Dimension(50,20)); 
-//        JFormattedTextField maxTextField = new JFormattedTextField(formatter);
-        
-        //set min and max fields to current magnitudes.
-        minTextField.setText("6.00"); //or something
-//        maxTextField.setText("6.00");
-//        minTextField.setValue(lon);
+        JSlider slider = new JSlider(-2, 6, _minMagnitude);
+        slider.setMajorTickSpacing(2);
+        slider.setMinorTickSpacing(1);
+        slider.setPaintTicks(true);
+        slider.setPaintLabels(true);
                 
-        JLabel minLabel = new JLabel("Minimum Magnitude: ");
-        minLabel.setLabelFor(minTextField);
-        
-//        JLabel maxLabel = new JLabel("Maximum Magnitude: ");
-//        maxLabel.setLabelFor(maxTextField);
+        JLabel minLabel = new JLabel("Minimum Magnitude: "); //is this correct?
+        minLabel.setLabelFor(slider);
         
         JButton btnApply = new JButton("Apply");
         btnApply.addActionListener(new ActionListener() {
@@ -179,17 +188,16 @@ public class StarMap extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) { 
 
-                _minMagnitude = (int)minTextField.getValue(); //cant be double? thinks its lossy?
+                _minMagnitude = (int)slider.getValue(); //cant be double? thinks its lossy?
                 System.out.println(_minMagnitude);
+                repaint();
                 myframe.dispose();
                 
             }
         });
         
         myframe.getContentPane().add(minLabel);
-        myframe.getContentPane().add(minTextField);
-//        myframe.getContentPane().add(maxLabel);
-//        myframe.getContentPane().add(maxTextField);
+        myframe.getContentPane().add(slider);
         myframe.getContentPane().add(btnApply);
 
         myframe.setVisible(true);
