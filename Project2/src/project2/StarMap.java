@@ -1,13 +1,9 @@
 package project2;
 import java.awt.*; 
 import java.awt.event.*; 
-import java.text.DateFormat;
 import java.util.*; 
 import javax.swing.*;
 import project2.xmlparser.*;
-import java.text.DecimalFormat;
-import javax.swing.text.NumberFormatter;
-import java.text.NumberFormat;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 
@@ -95,36 +91,54 @@ public class StarMap extends JFrame {
         _scrollAmount = 0; 
         scrollScale = 1; 
         
+        //initialize frame
         JFrame myframe = new JFrame();
         myframe.setTitle("Change Location and Date");
-        myframe.setSize(new Dimension(600, 200));
-        myframe.getContentPane().setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
         
-        JFormattedTextField dateTextField = new JFormattedTextField(GregorianCalendar.getInstance().getTime());
-//        dateTextField.setValue(cal.getTime());
-        
-        float minutes = 100.5f; // 1:40:30
+        //declare layouts
+        GridLayout grid = new GridLayout(6, 1, 5, 5); 
+        FlowLayout f1 = new FlowLayout(FlowLayout.CENTER, 5, 5);
+        FlowLayout f2 = new FlowLayout(FlowLayout.CENTER, 5, 5);
+        FlowLayout f3 = new FlowLayout(FlowLayout.CENTER, 5, 5);
+        FlowLayout f4 = new FlowLayout(FlowLayout.CENTER, 5, 5);
+        FlowLayout f5 = new FlowLayout(FlowLayout.CENTER, 5, 5);
+        FlowLayout f6 = new FlowLayout(FlowLayout.CENTER, 5, 5);
+        FlowLayout f7 = new FlowLayout(FlowLayout.CENTER, 5, 5);
 
-        Calendar c = Calendar.getInstance();
-        c.set(Calendar.HOUR_OF_DAY, 0);
-        c.set(Calendar.MINUTE, 0);
-        c.set(Calendar.SECOND, 0);
-        c.add(Calendar.MINUTE, (int) minutes);
-        c.add(Calendar.SECOND, (int) ((minutes % (int) minutes) * 60));
-        final Date date = c.getTime();
+        //make panels for layouts to go into
+        JPanel p1 = new JPanel();
+        JPanel p2 = new JPanel();
+        JPanel p3 = new JPanel();
+        JPanel p4 = new JPanel();
+        JPanel p5 = new JPanel();
+        JPanel p6 = new JPanel();
+        
+        //set panel layouts
+        p1.setLayout(f1);
+        p2.setLayout(f2);
+        p3.setLayout(f3);
+        p4.setLayout(f4);
+        p5.setLayout(f5);
+        p6.setLayout(f6);
+        
+        //set frame layout
+        myframe.getContentPane().setLayout(grid);
+        
+        //initialize date and time text fields
+        JFormattedTextField dateTextField = new JFormattedTextField(GregorianCalendar.getInstance().getTime());
 
         Format timeFormat = new SimpleDateFormat("HH:mm:ss");
         JFormattedTextField timeTextField = new JFormattedTextField(timeFormat);
         timeTextField.setValue(cal.getTime());
-//        timeTextField.setValue(date);
                 
+        //initialize labels
         JLabel dateLabel = new JLabel("Set Date: ");
         dateLabel.setLabelFor(dateTextField);
         
-        JLabel timeLabel = new JLabel("Set Time: ");
+        JLabel timeLabel = new JLabel("     Set Time: ");
         timeLabel.setLabelFor(timeTextField);
         
-        //90 to -90 and 180 and -180
+        //initialize Latitude slider
         JSlider latSlider = new JSlider(-90, 90, (int)lat);
         latSlider.setMajorTickSpacing(10);
         latSlider.setMinorTickSpacing(5);
@@ -132,6 +146,7 @@ public class StarMap extends JFrame {
         latSlider.setPaintLabels(true);
         latSlider.setPreferredSize(new Dimension(500, 50));
         
+        //initialize Longitude slider
         JSlider lonSlider = new JSlider(-180, 180, (int)lon);
         lonSlider.setMajorTickSpacing(20);
         lonSlider.setMinorTickSpacing(10);
@@ -139,18 +154,23 @@ public class StarMap extends JFrame {
         lonSlider.setPaintLabels(true);
         lonSlider.setPreferredSize(new Dimension(500, 50));
         
+        //initialize Altitude slider
         JSlider altSlider = new JSlider(0, 90, (int)alt);
         altSlider.setMajorTickSpacing(10);
         altSlider.setMinorTickSpacing(5);
         altSlider.setPaintTicks(true);
         altSlider.setPaintLabels(true);
+        altSlider.setPreferredSize(new Dimension(500, 50));
         
-        JSlider aziSlider = new JSlider(0, 180, (int)azi); //i dunno.
+        //initialize Azimuth slider
+        JSlider aziSlider = new JSlider(0, 360, (int)azi); 
         aziSlider.setMajorTickSpacing(20);
-        aziSlider.setMinorTickSpacing(5);
+        aziSlider.setMinorTickSpacing(10);
         aziSlider.setPaintTicks(true);
         aziSlider.setPaintLabels(true);
+        aziSlider.setPreferredSize(new Dimension(500, 50));
         
+        //initialize labels
         JLabel latLabel = new JLabel("Latidute: ");
         latLabel.setLabelFor(latSlider);
         JLabel lonLabel = new JLabel("Longitude: ");
@@ -161,50 +181,61 @@ public class StarMap extends JFrame {
         JLabel aziLabel = new JLabel("Azimuth: ");
         aziLabel.setLabelFor(aziSlider);
         
+        //initialize Apply button
         JButton btnApply = new JButton("Apply");
-        btnApply.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) { 
-//                GregorianCalendar tempCal = new GregorianCalendar(2014, 11, 18, 9, 0, 0);
-                GregorianCalendar tempCal = new GregorianCalendar(((Date)dateTextField.getValue()).getYear(), 
-                        ((Date)dateTextField.getValue()).getMonth(), 
-                        ((Date)dateTextField.getValue()).getDate(), 
-                        ((Date)timeTextField.getValue()).getHours(),
-                        ((Date)timeTextField.getValue()).getMinutes(),
-                        ((Date)timeTextField.getValue()).getSeconds());
-
-                cal.setTime(tempCal.getTime());
-                System.out.println("cal: " + cal);
-                
-                lat = latSlider.getValue();
-                lon = lonSlider.getValue();
-                System.out.println(cal);
-                repaint();
-                myframe.dispose();
-            }
+        
+        //handle button click
+        btnApply.addActionListener((ActionEvent e) -> {
+            GregorianCalendar tempCal = new GregorianCalendar(((Date)dateTextField.getValue()).getYear(),
+                    ((Date)dateTextField.getValue()).getMonth(),
+                    ((Date)dateTextField.getValue()).getDate(),
+                    ((Date)timeTextField.getValue()).getHours(),
+                    ((Date)timeTextField.getValue()).getMinutes(),
+                    ((Date)timeTextField.getValue()).getSeconds());
+            
+            cal.setTime(tempCal.getTime());
+            //System.out.println("cal: " + cal);
+            
+            lat = latSlider.getValue();
+            lon = lonSlider.getValue();
+            alt = altSlider.getValue();
+            azi = aziSlider.getValue();
+            
+            System.out.println(cal);
+            repaint();
+            myframe.dispose();
         });
         
+        //add labels, sliders, and text fields to the correct panel
+        p1.add(dateLabel);
+        p1.add(dateTextField);
         
-        myframe.getContentPane().add(dateLabel);
-        myframe.getContentPane().add(dateTextField);
+        p1.add(timeLabel);
+        p1.add(timeTextField);
         
-        myframe.getContentPane().add(timeLabel);
-        myframe.getContentPane().add(timeTextField);
+        p2.add(latLabel);
+        p2.add(latSlider);
+        p3.add(lonLabel);
+        p3.add(lonSlider);
         
-        myframe.getContentPane().add(latLabel);
-        myframe.getContentPane().add(latSlider);
-        myframe.getContentPane().add(lonLabel);
-        myframe.getContentPane().add(lonSlider);
+        p4.add(altLabel);
+        p4.add(altSlider);
+        p5.add(aziLabel);
+        p5.add(aziSlider);
         
-//        myframe.getContentPane().add(altLabel);
-//        myframe.getContentPane().add(altSlider);
-//        myframe.getContentPane().add(aziLabel);
-//        myframe.getContentPane().add(aziSlider);
+        p6.add(btnApply);
         
-        myframe.getContentPane().add(btnApply);
+        //add panels to frame
+        myframe.getContentPane().add(p1);
+        myframe.getContentPane().add(p2);
+        myframe.getContentPane().add(p3);
+        myframe.getContentPane().add(p4);
+        myframe.getContentPane().add(p5);
+        myframe.getContentPane().add(p6);
 
+        myframe.pack(); 
         myframe.setVisible(true);
+        
     }
     
     private void toggleConstellations(){
@@ -214,38 +245,40 @@ public class StarMap extends JFrame {
     
     private void changeVisualMagnitude(){
         
+        //initizliae frame
         JFrame myframe = new JFrame();
         myframe.setTitle("Change Visual Magnitude");
         myframe.setSize(new Dimension(400, 150));
         myframe.getContentPane().setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
        
+        //check that _minMagnitude is not outside the bounds of ths slider
         if(_minMagnitude == 10)
             _minMagnitude = 6;
 
+        //initialize slider
         JSlider slider = new JSlider(-2, 6, (int)_minMagnitude);
         slider.setMajorTickSpacing(2);
         slider.setMinorTickSpacing(1);
         slider.setPaintTicks(true);
         slider.setPaintLabels(true);
         
+        //initialize label
         JLabel minLabel = new JLabel("Minimum Magnitude: "); //is this correct?
         minLabel.setLabelFor(slider);
         
+        //initialize button
         JButton btnApply = new JButton("Apply");
-        btnApply.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) { 
-
-                
-                _minMagnitude = (int)slider.getValue();
-                System.out.println(_minMagnitude);
-                repaint();
-                myframe.dispose();
-                
-            }
+        
+        //handle button click
+        btnApply.addActionListener((ActionEvent e) -> {
+            //set _minMagnitude to new value
+            _minMagnitude = (int)slider.getValue();
+            System.out.println(_minMagnitude);
+            repaint();
+            myframe.dispose();
         });
         
+        //add label, slider, and button to frame
         myframe.getContentPane().add(minLabel);
         myframe.getContentPane().add(slider);
         myframe.getContentPane().add(btnApply);
