@@ -389,6 +389,9 @@ class DrawingPane extends JPanel
                 g.setColor(Color.yellow);
                 //draw the star (should be circle) 
                 g.fillOval(px1, py1, (int)(2* radius), (int)(2* radius));
+                g.setColor(Color.blue);
+                if (s.commonName != null && s.vmag < 3)
+                g.drawString(s.commonName, (int)( px1 + 2 * radius), (int)(py1 + 2 * radius));
             }
         }
     }
@@ -463,7 +466,13 @@ class DrawingPane extends JPanel
                             //if it is on screen draw the line. 
                             if (_position.Clipped == false)
                             {
+                                g.setColor(Color.white);
                                 g.drawLine(px1, py1, px2, py2);
+                                g.setColor(Color.GRAY);
+                                if (i == 0)
+                                {
+                                    g.drawString(c.getName(), (int)(px1 + 2 * radius),(int)(py1 - 2 * radius)); 
+                                }
                             }
                         }
                     }
