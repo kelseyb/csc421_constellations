@@ -48,7 +48,7 @@ public class xmlparser {
     
     public static class star implements Comparable
     {
-        public double hrnumber;
+        public int hrnumber;
         public String name;
         public String starConstellation;
         
@@ -231,7 +231,7 @@ public class xmlparser {
 //                System.out.print("new star?\n");
 //                System.out.print( "hrnumber: " + current.getName() +" = "+ current.getValue() +"\n");
                 tempStar = new star();
-                double t = Double.parseDouble(current.getValue().toString());
+                int t = Integer.parseInt(current.getValue().toString());
                 tempStar.hrnumber = t;
             }
             else if(current.getName() == "name")

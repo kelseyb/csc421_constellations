@@ -16,6 +16,7 @@ public class StarMap extends JFrame {
     private double _minMagnitude = 10;
     private int _scrollAmount = 0;
     private double scrollScale = 1;
+    private StarInfo info; 
     private double lat = 44.08, lon = -103.23, azi = 0, alt = 20; 
     private GregorianCalendar cal = new GregorianCalendar(2014, 11, 18, 9, 0, 0);
     
@@ -84,6 +85,8 @@ public class StarMap extends JFrame {
         
         contents = getContentPane();        
         contents.add(new DrawingPane());
+        info = new StarInfo(); 
+        contents.add(info, BorderLayout.WEST); 
         this.pack(); 
         setVisible(true); 
     }
@@ -285,7 +288,7 @@ class DrawingPane extends JPanel
                         int px1 = (int)((_position.X + 1 ) * scrollScale * d.width/2) + shift; 
                         int py1 = d.height - (int)((_position.Y ) * scrollScale * d.height) ;
                         dist = (px1 - e.getX()) * (px1 - e.getX()) + (py1 - e.getY()) * (py1 - e.getY()); 
-                        if (dist < min_dist && dist < 16)
+                        if (dist < min_dist && dist < 36)
                         {
                             min_dist = dist; 
                             currentGuess = _parser.starList.indexOf(s); 
@@ -295,6 +298,7 @@ class DrawingPane extends JPanel
                 if (currentGuess != -1)
                 {
                     currentStar = currentGuess; 
+                    ChangeStarInfo(currentStar);
                     System.out.printf(_parser.starList.get(currentStar).name + " \n"); 
                 }
             }
@@ -387,6 +391,25 @@ class DrawingPane extends JPanel
                 g.fillOval(px1, py1, (int)(2* radius), (int)(2* radius));
             }
         }
+    }
+    
+    private void ChangeStarInfo(int currentStar)
+    {
+        star s = _parser.starList.get(currentStar); 
+        info.CommonName.setText(s.commonName);
+        Integer t = s.hrnumber;
+        info.HRNumber.setText(t.toString()); 
+        info.Name.setText(s.name);
+        Double d = s.ra; 
+        d = Math.toDegrees(d); 
+        info.RA.setText(String.format("%4.2f degrees", d));
+        d = s.dec; 
+        d = Math.toDegrees(d);
+        info.Dec.setText(String.format("%4.2f degrees", d)); 
+        d = s.vmag; 
+        info.Mag.setText(d.toString()); 
+        info.Constellation.setText(s.starConstellation); 
+        info.Class.setText(s.starClass);
     }
     
     private void DrawConstellations(Graphics g)
