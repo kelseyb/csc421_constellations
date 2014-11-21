@@ -388,7 +388,7 @@ class DrawingPane extends JPanel
                     {
                         //find the position of the star
                         int px1 = (int)((_position.X + 1 ) * scrollScale * d.width/2) + shift; 
-                        int py1 = d.height - (int)((_position.Y ) * scrollScale * d.height) ;
+                        int py1 = d.height - (int)((_position.Y ) * scrollScale * d.height - 3) ;
                         dist = (px1 - e.getX()) * (px1 - e.getX()) + (py1 - e.getY()) * (py1 - e.getY()); 
                         if (dist < min_dist && dist < 36)
                         {
