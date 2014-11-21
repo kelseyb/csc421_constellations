@@ -29,6 +29,7 @@ public class StarInfo extends JPanel {
     
     StarInfo()
     {
+        String unknown = "???";
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         
         JLabel label = new JLabel("CurrentStar"); 
@@ -42,7 +43,7 @@ public class StarInfo extends JPanel {
         label.setBorder(new EmptyBorder(10, 0, 0, 0));
         add(label); 
         
-        HRNumber = new JLabel("???");
+        HRNumber = new JLabel(unknown);
         add(HRNumber); 
         
         label = new JLabel("Name:"); 
@@ -50,7 +51,7 @@ public class StarInfo extends JPanel {
         label.setBorder(new EmptyBorder(10, 0, 0, 0));
         add(label); 
         
-        Name = new JLabel("???"); 
+        Name = new JLabel(unknown); 
         add(Name); 
         
         label = new JLabel("Common Name:"); 
@@ -58,7 +59,7 @@ public class StarInfo extends JPanel {
         label.setBorder(new EmptyBorder(10, 0, 0, 0));
         add(label);
         
-        CommonName = new JLabel("???"); 
+        CommonName = new JLabel(unknown); 
         add(CommonName); 
 
         
@@ -67,7 +68,7 @@ public class StarInfo extends JPanel {
         label.setBorder(new EmptyBorder(10, 0, 0, 0));
         add(label); 
         
-        Constellation = new JLabel("???"); 
+        Constellation = new JLabel(unknown); 
         add(Constellation); 
         
         
@@ -76,7 +77,7 @@ public class StarInfo extends JPanel {
         label.setBorder(new EmptyBorder(10, 0, 0, 0));
         add(label); 
         
-        RA = new JLabel("???"); 
+        RA = new JLabel(unknown); 
         add(RA); 
         
         label = new JLabel("Declination:"); 
@@ -84,7 +85,7 @@ public class StarInfo extends JPanel {
         label.setBorder(new EmptyBorder(10, 0, 0, 0));
         add(label); 
         
-        Dec = new JLabel("???");
+        Dec = new JLabel(unknown);
         add(Dec); 
         
         
@@ -93,7 +94,7 @@ public class StarInfo extends JPanel {
         label.setBorder(new EmptyBorder(10, 0, 0, 0));
         add(label); 
         
-        Mag = new JLabel("???"); 
+        Mag = new JLabel(unknown); 
         add(Mag); 
         
         
@@ -102,7 +103,7 @@ public class StarInfo extends JPanel {
         label.setBorder(new EmptyBorder(10, 0, 0, 0));
         add(label); 
         
-        Class = new JLabel("???"); 
+        Class = new JLabel(unknown); 
         add(Class); 
         
         setBorder(BorderFactory.createEmptyBorder(10,10,10,10));

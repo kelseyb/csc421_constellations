@@ -1,12 +1,15 @@
 package project2;
 import java.awt.*; 
 import java.awt.event.*; 
+import java.text.DateFormat;
 import java.util.*; 
 import javax.swing.*;
 import project2.xmlparser.*;
 import java.text.DecimalFormat;
 import javax.swing.text.NumberFormatter;
 import java.text.NumberFormat;
+import java.text.Format;
+import java.text.SimpleDateFormat;
 
 public class StarMap extends JFrame {
     private Container contents; 
@@ -19,9 +22,6 @@ public class StarMap extends JFrame {
     private StarInfo info; 
     private double lat = 44.08, lon = -103.23, azi = 0, alt = 20; 
     private GregorianCalendar cal = new GregorianCalendar(2014, 11, 18, 9, 0, 0);
-    
-//    private JFrame myframe; // instance variable of a JFrame
-//    private JDialog mydialog; //do these have to be here?
     
     public StarMap(){
         super("Star Map");  
@@ -97,27 +97,111 @@ public class StarMap extends JFrame {
         
         JFrame myframe = new JFrame();
         myframe.setTitle("Change Location and Date");
-        myframe.setSize(new Dimension(400, 200));
+        myframe.setSize(new Dimension(600, 200));
         myframe.getContentPane().setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
         
         JFormattedTextField dateTextField = new JFormattedTextField(GregorianCalendar.getInstance().getTime());
+//        dateTextField.setValue(cal.getTime());
+        
+        float minutes = 100.5f; // 1:40:30
+
+        Calendar c = Calendar.getInstance();
+        c.set(Calendar.HOUR_OF_DAY, 0);
+        c.set(Calendar.MINUTE, 0);
+        c.set(Calendar.SECOND, 0);
+        c.add(Calendar.MINUTE, (int) minutes);
+        c.add(Calendar.SECOND, (int) ((minutes % (int) minutes) * 60));
+        final Date date = c.getTime();
+
+        Format timeFormat = new SimpleDateFormat("HH:mm:ss");
+        JFormattedTextField timeTextField = new JFormattedTextField(timeFormat);
+        timeTextField.setValue(cal.getTime());
+//        timeTextField.setValue(date);
                 
         JLabel dateLabel = new JLabel("Set Date: ");
         dateLabel.setLabelFor(dateTextField);
+        
+        JLabel timeLabel = new JLabel("Set Time: ");
+        timeLabel.setLabelFor(timeTextField);
+        
+        //90 to -90 and 180 and -180
+        JSlider latSlider = new JSlider(-90, 90, (int)lat);
+        latSlider.setMajorTickSpacing(10);
+        latSlider.setMinorTickSpacing(5);
+        latSlider.setPaintTicks(true);
+        latSlider.setPaintLabels(true);
+        latSlider.setPreferredSize(new Dimension(500, 50));
+        
+        JSlider lonSlider = new JSlider(-180, 180, (int)lon);
+        lonSlider.setMajorTickSpacing(20);
+        lonSlider.setMinorTickSpacing(10);
+        lonSlider.setPaintTicks(true);
+        lonSlider.setPaintLabels(true);
+        lonSlider.setPreferredSize(new Dimension(500, 50));
+        
+        JSlider altSlider = new JSlider(0, 90, (int)alt);
+        altSlider.setMajorTickSpacing(10);
+        altSlider.setMinorTickSpacing(5);
+        altSlider.setPaintTicks(true);
+        altSlider.setPaintLabels(true);
+        
+        JSlider aziSlider = new JSlider(0, 180, (int)azi); //i dunno.
+        aziSlider.setMajorTickSpacing(20);
+        aziSlider.setMinorTickSpacing(5);
+        aziSlider.setPaintTicks(true);
+        aziSlider.setPaintLabels(true);
+        
+        JLabel latLabel = new JLabel("Latidute: ");
+        latLabel.setLabelFor(latSlider);
+        JLabel lonLabel = new JLabel("Longitude: ");
+        lonLabel.setLabelFor(lonSlider);
+        
+        JLabel altLabel = new JLabel("Altitude: ");
+        altLabel.setLabelFor(altSlider);
+        JLabel aziLabel = new JLabel("Azimuth: ");
+        aziLabel.setLabelFor(aziSlider);
         
         JButton btnApply = new JButton("Apply");
         btnApply.addActionListener(new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e) { 
-                cal.setTime((Date)dateTextField.getValue());
+//                GregorianCalendar tempCal = new GregorianCalendar(2014, 11, 18, 9, 0, 0);
+                GregorianCalendar tempCal = new GregorianCalendar(((Date)dateTextField.getValue()).getYear(), 
+                        ((Date)dateTextField.getValue()).getMonth(), 
+                        ((Date)dateTextField.getValue()).getDate(), 
+                        ((Date)timeTextField.getValue()).getHours(),
+                        ((Date)timeTextField.getValue()).getMinutes(),
+                        ((Date)timeTextField.getValue()).getSeconds());
+
+                cal.setTime(tempCal.getTime());
+                System.out.println("cal: " + cal);
+                
+                lat = latSlider.getValue();
+                lon = lonSlider.getValue();
                 System.out.println(cal);
+                repaint();
                 myframe.dispose();
             }
         });
         
+        
         myframe.getContentPane().add(dateLabel);
         myframe.getContentPane().add(dateTextField);
+        
+        myframe.getContentPane().add(timeLabel);
+        myframe.getContentPane().add(timeTextField);
+        
+        myframe.getContentPane().add(latLabel);
+        myframe.getContentPane().add(latSlider);
+        myframe.getContentPane().add(lonLabel);
+        myframe.getContentPane().add(lonSlider);
+        
+//        myframe.getContentPane().add(altLabel);
+//        myframe.getContentPane().add(altSlider);
+//        myframe.getContentPane().add(aziLabel);
+//        myframe.getContentPane().add(aziSlider);
+        
         myframe.getContentPane().add(btnApply);
 
         myframe.setVisible(true);
@@ -129,37 +213,23 @@ public class StarMap extends JFrame {
     }
     
     private void changeVisualMagnitude(){
-        _minMagnitude = 10; 
         
         JFrame myframe = new JFrame();
-        myframe.setTitle("Change Location and Date");
-        myframe.setSize(new Dimension(400, 75));
+        myframe.setTitle("Change Visual Magnitude");
+        myframe.setSize(new Dimension(400, 150));
         myframe.getContentPane().setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
-        
-//        DecimalFormat format = DecimalFormat.
-//        DecimalFormat format = new DecimalFormat("#.##"); //yes?
-//        NumberFormat f = new NumberFormat();
-//
-        //this isn't really working.
-        NumberFormatter formatter = new NumberFormatter(new DecimalFormat("#.##")); //this isn't working?
-//        formatter.setValueClass(Double.class); //optional, ensures you will always get a long value
-        formatter.setAllowsInvalid(false);
-        formatter.setMinimum(-2);
-//        formatter.setMaximum(6);
+       
+        if(_minMagnitude == 10)
+            _minMagnitude = 6;
 
-//        JFormattedTextField field = new JFormattedTextField(formatter);
+        JSlider slider = new JSlider(-2, 6, (int)_minMagnitude);
+        slider.setMajorTickSpacing(2);
+        slider.setMinorTickSpacing(1);
+        slider.setPaintTicks(true);
+        slider.setPaintLabels(true);
         
-        JFormattedTextField minTextField = new JFormattedTextField(formatter);
-        minTextField.setPreferredSize(new Dimension(50,20)); ;
-        
-        //set min and max fields to current magnitudes.
-        minTextField.setText("6.00"); //or something
-                
-        JLabel minLabel = new JLabel("Minimum Magnitude: ");
-        minLabel.setLabelFor(minTextField);
-        
-//        JLabel maxLabel = new JLabel("Maximum Magnitude: ");
-//        maxLabel.setLabelFor(maxTextField);
+        JLabel minLabel = new JLabel("Minimum Magnitude: "); //is this correct?
+        minLabel.setLabelFor(slider);
         
         JButton btnApply = new JButton("Apply");
         btnApply.addActionListener(new ActionListener() {
@@ -168,17 +238,16 @@ public class StarMap extends JFrame {
             public void actionPerformed(ActionEvent e) { 
 
                 
-                _minMagnitude = (int)minTextField.getValue(); //cant be double? thinks its lossy?
+                _minMagnitude = (int)slider.getValue();
                 System.out.println(_minMagnitude);
+                repaint();
                 myframe.dispose();
                 
             }
         });
         
         myframe.getContentPane().add(minLabel);
-        myframe.getContentPane().add(minTextField);
-//        myframe.getContentPane().add(maxLabel);
-//        myframe.getContentPane().add(maxTextField);
+        myframe.getContentPane().add(slider);
         myframe.getContentPane().add(btnApply);
 
         myframe.setVisible(true);
