@@ -361,6 +361,8 @@ class DrawingPane extends JPanel
                 {
                     alt = 0; 
                 }
+                azi = azi > 360 ? azi - 360 : azi; 
+                azi = azi < 0   ? azi + 360 : azi; 
                 repaint();
             }
         } );
