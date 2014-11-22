@@ -1,3 +1,27 @@
+/**
+ * @author Caitlin Taggart and Kelsey Bellew
+ * 
+ * Project Name:    Star Map
+ * Class:           CSC 421 - GUI / OOP
+ * Professor:       Dr. John Weiss
+ * Institution:     SDSM&T
+ * Due Date:        11 - 25 -14 
+ * 
+ * Description:     
+ * This program is a basic stellarium, that uses an orthographic projection to 
+ * display stars and constellations to the user. The user can change their 
+ * viewing direction in two ways. The first is by clicking and dragging on the 
+ * map. The second through the menu. The user can also change the location that 
+ * they are viewing the stars and the time and date that they are viewing the 
+ * stars. By scrolling over different stars the user can see information about 
+ * that star in the panel on the left. The user can zoom in/out by using the 
+ * mouses scroll wheel, or by using the menu. Finally, through the menu
+ * constellations can be turned on or off. 
+ * 
+ * The information about the stars comes from two xml files: stars.xml and 
+ * constellations.xml which are parsed into lists to use for drawing the stars. 
+ */
+
 package project2;
 import java.awt.*; 
 import java.awt.event.*; 
@@ -7,17 +31,44 @@ import project2.xmlparser.*;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 
+
+/**
+ * @author Caitlin Taggart and Kelsey Bellew 
+ * The main class of the program. Creates and displays the the main window of
+ * the application and the interactions between different parts of the window. 
+ * This includes menu items and their actions, the drawing pane and its actions, 
+ * and displaying information about the current star it is over. 
+ */ 
 public class StarMap extends JFrame {
-    private Container contents; 
-    private boolean _showConstellations = true; 
-    private xmlparser _parser; 
-    private StarPosition _position; 
-    private double _minMagnitude = 10;
+    //the contents of the JFrame 
+    private final Container contents; 
+    private final StarInfo info; //displays information about the current star 
+    private final xmlparser _parser; //the parser that has the list of stars and constellations 
+    private final StarPosition _position; //the class that determines the placement of the star on screen.
+    
+    //current minimum value of stars to be shown (show all stars)
+    private double _minMagnitude = 10; 
+    //the amount the the user has scrolled with the mouse wheel 
     private int _scrollAmount = 0;
+    //the scale that should be used to draw the stars 
     private double scrollScale = 1;
-    private StarInfo info; 
+    //if constellations should be shown or not 
+    private boolean _showConstellations = true; 
+    //information about where the user is looking 
     private double lat = 44.08, lon = -103.23, azi = 0, alt = 20; 
+    //when the user is looking at things. 
     private GregorianCalendar cal = new GregorianCalendar(2014, 11, 18, 9, 0, 0);
+ 
+/**
+ * @author Caitlin Taggart
+ * Create the Star Map window and shows it. Parses through the xml files, and 
+ * creates the menu bar and items and listeners to the menu bar. Creates menu 
+ * items including exiting the program, changing the location and date of 
+ * viewing, toggling constellations, changing the minimum visual magnitude to be 
+ * shown, and zooming in and out. It then sets up the drawing window where the 
+ * stars will be drawn and the information pane where star information will be 
+ * displayed. 
+ */     
     
     public StarMap(){
         super("Star Map");  
@@ -49,12 +100,12 @@ public class StarMap extends JFrame {
         });
         menu.add(menuItem); 
         
-        //toggle constellations to the menu 
+        //add toggle constellations to the menu 
         JCheckBoxMenuItem checkMenuItem = new JCheckBoxMenuItem("Toggle Constelations");
         checkMenuItem.addActionListener(new ActionListener(){
             public void actionPerformed (ActionEvent ae) {toggleConstellations();}
         });
-        checkMenuItem.setSelected(true); 
+        checkMenuItem.setSelected(true); //make the menu item checked. 
         menu.add(checkMenuItem); 
         
         //select magnitude to the menu. 
@@ -64,12 +115,16 @@ public class StarMap extends JFrame {
         });
         menu.add(menuItem); 
         
+        //add a way to zoom in on the menu in case the user doesn't have a 
+        //scroll wheel. 
         menuItem = new JMenuItem ("Zoom In");
         menuItem.addActionListener(new ActionListener(){
             public void actionPerformed (ActionEvent ae) {zoomIn(1);}
         });
         menu.add(menuItem);
         
+        //add a way to zoom in on the menu in case the user doesn't have a 
+        //scroll wheel. 
         menuItem = new JMenuItem ("Zoom Out");
         menuItem.addActionListener(new ActionListener(){
             public void actionPerformed (ActionEvent ae) {zoomIn(-1);}
@@ -79,11 +134,12 @@ public class StarMap extends JFrame {
         //set the menubar to our menu bar 
         setJMenuBar(menuBar); 
         
+        //get the content pane and add the drawing pain and the information panel
         contents = getContentPane();        
         contents.add(new DrawingPane());
         info = new StarInfo(); 
         contents.add(info, BorderLayout.WEST); 
-        this.pack(); 
+        this.pack();
         setVisible(true); 
     }
     
@@ -247,6 +303,11 @@ public class StarMap extends JFrame {
         
     }
     
+/**
+ * @author Caitlin Taggart
+ * Toggle the constellations showing or not showing. 
+ * 
+ */ 
     private void toggleConstellations(){
         _showConstellations = !_showConstellations; 
         repaint(); 
@@ -296,17 +357,27 @@ public class StarMap extends JFrame {
         repaint(); 
     }
     
+ /**
+ * @author Caitlin Taggart
+ * Determines the scale that the the drawing pane should be drawn at based on 
+ * the number of "clicks" of the scroll wheel that have occurred. If 0 then the 
+ * scale is one, if less than zero then the user has scrolled up which means 
+ * they zoomed in, and if the greater than zero the user has scrolled down which 
+ * means zoomed out. 
+ * 
+ * @param i - the amount the scale has changed. 
+ */ 
     private void zoomIn(int i){
-        _scrollAmount += i; 
+        _scrollAmount += i; //determine the new scroll amount 
         if (_scrollAmount == 0)
         {
             scrollScale = 1; 
         }
-        else if (_scrollAmount < 0)
+        else if (_scrollAmount < 0) //make the scale smaller than 1
         {
             scrollScale =  (_scrollAmount + 8 ) * .125;
         }
-        else
+        else //make the scale larger than 1 (increases by 8ths
         {
             scrollScale =  8.0 / (- _scrollAmount + 8.0); 
         }
@@ -315,16 +386,30 @@ public class StarMap extends JFrame {
         
         
    
-// drawing panel class
+/**
+ * @author Caitlin Taggart
+ * The drawing pane class takes care of showing the different stars and
+ * constellations as well as showing information about stars. This includes 
+ * watching mouse motion for the window to make sure that the drawing pane 
+ * updates when the user drags the mouse.
+ */ 
 class DrawingPane extends JPanel
 {
-    private int x1 = 0, x2 = 0;
-    private int y1 = 0, y2 = 0; 
-    private boolean isDragging;
-    private int currentStar; 
+    private int x1 = 0, x2 = 0; //starting position of a mouse drag
+    private int y1 = 0, y2 = 0; //ending position of a mouse drag
+    private boolean isDragging; //if the user is currently dragging or not 
+    private int currentStar; //the current star to show information for 
     
     
-    // constructor
+/**
+ * @author Caitlin Taggart
+ * Constructor for the drawing pane of the center window. Sets the Mouse
+ * listeners since the viewers gazing direction and viewing angle changes with 
+ * the drag of a mouse. Finally listens for the mouse movement 
+ * since to detect where what star the mouse is over and display information
+ * about that star. 
+ *.  
+ */ 
     public DrawingPane()
     {
 	// can use any background color for "canvas" (default is white)
@@ -337,8 +422,10 @@ class DrawingPane extends JPanel
         {
             public void mousePressed( MouseEvent e )
             {
+                //get the starting position
                 x1 = e.getX();
                 y1 = e.getY(); 
+                //we are now dragging the mouse 
                 isDragging = true; 
             }
         } );
@@ -347,20 +434,26 @@ class DrawingPane extends JPanel
         addMouseListener( new MouseAdapter()
         {
             public void mouseReleased( MouseEvent e )
-            {
+            { 
+                //get the position where the user stopped dragging. 
                 x2 = e.getX();
                 y2 = e.getY(); 
                 isDragging = false; 
+                
+                //let the screen display half of what the viewer can see 
                 azi = azi - (double)(x2 - x1) / (double)(getSize().width) * 180.0;
+                //let the screen display 90 degress of altitude. 
                 alt = alt + (double) (y2 - y1) / (double)(getSize().height) * 90.0;
+                // viewers can only see from 0 to 90 degrees of altitude 
                 if (alt > 90)
                 {
-                    alt = 90;
+                    alt = 90; 
                 }
                 else if (alt < 0)
                 {
                     alt = 0; 
                 }
+                //keep the gazing direction from 0 to 360 
                 azi = azi > 360 ? azi - 360 : azi; 
                 azi = azi < 0   ? azi + 360 : azi; 
                 repaint();
@@ -372,6 +465,8 @@ class DrawingPane extends JPanel
         {
             public void mouseDragged( MouseEvent e )
             {
+                //get the new position of the mouse so it can be used for in
+                //between calculations of the movement. 
                 x2 = e.getX();
                 y2 = e.getY(); 
                 repaint();
@@ -389,9 +484,10 @@ class DrawingPane extends JPanel
                 double min_dist = 100000; 
                 int shift = (int)(d.width/ 2 - scrollScale * d.width / 2); 
                 
+                //find the closest star by parsing through the list. 
                 for (star s: _parser.starList)
                 {
-                    //calculate the point 
+                    //calculate the point of the star 
                     _position.GetPoint(s.ra, s.dec, lat, lon, azi, alt, cal); 
             
                     //draw the star if the star is not clipped. 
@@ -401,6 +497,9 @@ class DrawingPane extends JPanel
                         int px1 = (int)((_position.X + 1 ) * scrollScale * d.width/2) + shift; 
                         int py1 = d.height - (int)((_position.Y ) * scrollScale * d.height - 3) ;
                         dist = (px1 - e.getX()) * (px1 - e.getX()) + (py1 - e.getY()) * (py1 - e.getY()); 
+                        
+                        //if it is closer than the other stars and closer than 6 pixels away 
+                        //it is the star to display information about 
                         if (dist < min_dist && dist < 36)
                         {
                             min_dist = dist; 
@@ -408,8 +507,10 @@ class DrawingPane extends JPanel
                         }
                     }
                 }
+                //we found a close enough star 
                 if (currentGuess != -1)
                 {
+                    //display new information 
                     currentStar = currentGuess; 
                     ChangeStarInfo(currentStar);
                     System.out.printf(_parser.starList.get(currentStar).name + " \n"); 
@@ -419,33 +520,31 @@ class DrawingPane extends JPanel
         
         addMouseWheelListener((MouseWheelEvent e)-> 
         {
-            //scrollx = e.getX(); 
-            //scrolly = e.getY();
-            _scrollAmount += e.getWheelRotation();
-            if (_scrollAmount == 0)
-            {
-                scrollScale = 1; 
-            }
-            else if (_scrollAmount < 0)
-            {
-                scrollScale =  (_scrollAmount + 8 ) * .125;
-            }
-            else
-            {
-                scrollScale =  8.0 / (- _scrollAmount + 8.0); 
-            }
-            repaint(); 
+            //get the amount that the user has scrolled. 
+            zoomIn(e.getWheelRotation());
         });
         
     }
 
-    // start with 800x600 canvas
+/**
+ * @author Caitlin Taggart
+ * Sets the preferred size of the star viewing window.  
+ *
+ * @return the preferred size of the drawing window.  
+ */ 
     public Dimension getPreferredSize()
     {
-        return new Dimension( 800, 600 );
+        return new Dimension( 800, 400 );
     }
 
-    // repaint: draw the rectangle
+/**
+ * @author Caitlin Taggart
+ * Draws the stars and the the constellations based upon the current viewing 
+ * direction and angle, latitude, longitude, etc. Also checks to see if the 
+ * user is currently dragging the mouse and adjusts the azi and alt temporarily. 
+ *
+ * @param g - the object that will draw the stars and constellations.  
+ */  
     protected void paintComponent( Graphics g )
     {
 	// redraw filled oval and latest rubberbanded rectangle
@@ -480,7 +579,15 @@ class DrawingPane extends JPanel
             alt = temp2; 
         }
     }
-    
+/**
+ * @author Caitlin Taggart
+ * Draws all of the stars currently visible based upon the latitude, longitude, 
+ * time, and viewing direction and altitude. Also displays the common name of 
+ * star if it exists. Stars are
+ * displayed in different sizes inversely proportional to the visual magnitude. 
+ *
+ * @param g - the object used to draw the stars and their name. 
+ */      
     private void DrawStar(Graphics g)
     {
         Dimension d = this.getSize();
@@ -503,12 +610,22 @@ class DrawingPane extends JPanel
                 //draw the star (should be circle) 
                 g.fillOval(px1, py1, (int)(2* radius), (int)(2* radius));
                 g.setColor(Color.blue);
-                if (s.commonName != null && s.vmag < 3)
+                if (s.commonName != null)
                 g.drawString(s.commonName, (int)( px1 + 2 * radius), (int)(py1 + 2 * radius));
             }
         }
     }
     
+/**
+ * @author Caitlin Taggart
+ * Changes the star information such as name, common name, HR number, etc.
+ * using the index of the current star into a list created in xmlparser. The 
+ * index represents the star that the mouse is currently hovering over. Also 
+ * it displays the right ascension and the declination in degrees instead of 
+ * radians. 
+ *
+ * @param currentStar - the star that the mouse is currently hovering over. 
+ */    
     private void ChangeStarInfo(int currentStar)
     {
         star s = _parser.starList.get(currentStar); 
@@ -528,6 +645,16 @@ class DrawingPane extends JPanel
         info.Class.setText(s.starClass);
     }
     
+    
+/**
+ * @author Caitlin Taggart
+ * Draws the constellations based upon if the user has elected to show the
+ * constellations or not. It determines the location of both star in each line 
+ * of the constellation and then draws a line from the first star to the second
+ * star. It also places the name of the star at the point of the first star. 
+ *
+ * @param g - the object used to draw lines and strings on the screen. 
+ */
     private void DrawConstellations(Graphics g)
     {
         Dimension d = this.getSize();
@@ -597,6 +724,7 @@ class DrawingPane extends JPanel
 }
     
     /**
+     * Stars the StarMap application. 
      * @param args the command line arguments
      */
     public static void main(String[] args) {
