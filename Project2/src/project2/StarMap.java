@@ -139,6 +139,8 @@ public class StarMap extends JFrame {
         timeLabel.setLabelFor(timeTextField);
         
         //initialize Latitude slider
+        if(lat>90) lat = 90;
+        if(lat<0) lat = 0;
         JSlider latSlider = new JSlider(-90, 90, (int)lat);
         latSlider.setMajorTickSpacing(10);
         latSlider.setMinorTickSpacing(5);
@@ -147,6 +149,8 @@ public class StarMap extends JFrame {
         latSlider.setPreferredSize(new Dimension(500, 50));
         
         //initialize Longitude slider
+        if(lon>180) lon = 180;
+        if(lon<-180) lon = -180;
         JSlider lonSlider = new JSlider(-180, 180, (int)lon);
         lonSlider.setMajorTickSpacing(20);
         lonSlider.setMinorTickSpacing(10);
@@ -155,6 +159,8 @@ public class StarMap extends JFrame {
         lonSlider.setPreferredSize(new Dimension(500, 50));
         
         //initialize Altitude slider
+        if(alt>90) alt = 90;
+        if(alt<0) alt = 0;
         JSlider altSlider = new JSlider(0, 90, (int)alt);
         altSlider.setMajorTickSpacing(10);
         altSlider.setMinorTickSpacing(5);
@@ -163,6 +169,9 @@ public class StarMap extends JFrame {
         altSlider.setPreferredSize(new Dimension(500, 50));
         
         //initialize Azimuth slider
+        //System.out.println("azi:"+azi);
+        if(azi > 360) azi = 360;
+        if(azi < 0) azi = 0;
         JSlider aziSlider = new JSlider(0, 360, (int)azi); 
         aziSlider.setMajorTickSpacing(20);
         aziSlider.setMinorTickSpacing(10);
