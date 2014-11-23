@@ -1,7 +1,9 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ *  XMLParser Class: 
+ *  This contains code for parsing xmls, constellation class, and star class. 
+ *  When it gets the information out of the xml, it puts that information into 
+ *  an instance of a star or constellation, which is then added to a 
+ *  comprehencive list.
  */
 package project2;
 
@@ -11,8 +13,9 @@ import java.io.IOException;
 import java.util.*;
 
 /**
- *
- * @author 7032956
+ * @author Kelsey Bellew
+ * Parses the information found in xml files and stores them into star or 
+ * constellation classes, accordingly.
  */
 public class xmlparser {
 
@@ -25,7 +28,11 @@ public class xmlparser {
     private static constellation tempConstellation;
     private static star tempStar;
 
-    //empty constructor just parses a star file and the constellations file 
+    /**
+    * @author Kelsey Bellew
+    * Constructor for the xml parser class. It calls the function to parse 
+    * through the star file, and then the constellation file.
+    */ 
     public xmlparser(){
         generateStar("stars.xml");
         generateStar("constellations.xml");
@@ -39,6 +46,10 @@ public class xmlparser {
         }
     }
     
+    /**
+    * @author Caitlin Taggart
+    * ?
+    */ 
     public xmlparser(String[] xmlFiles){
         for(String s : xmlFiles)
         {
@@ -46,6 +57,10 @@ public class xmlparser {
         }
     }
     
+    /**
+    * @author Kelsey Bellew and Caitlin Taggart
+    * Star class to hold all the information associated with a given star.
+    */ 
     public static class star implements Comparable
     {
         public int hrnumber;
@@ -81,6 +96,11 @@ public class xmlparser {
     
     };
     
+    /**
+    * @author Kelsey Bellew
+    * Constellation class to hold all the information associated with a given 
+    * constellation.
+    */ 
     static class constellation
     {
         private String name;
@@ -115,7 +135,10 @@ public class xmlparser {
         }
     };
     
-    //possibly pass in star/constellation struct
+    /**
+    * @author Kelsey Bellew (using code from csc421 website)
+    * Takes in the name of an xml file and sets up the xml file to be read.
+    */
     public static void generateStar(String xml)
     {
         //reset isStar
@@ -142,7 +165,12 @@ public class xmlparser {
         }
     }
     
-    // print XML tags and leaf node values
+    /**
+    * @author Kelsey Bellew (using code from csc421 website)
+    * Goes through the xml file, looking at the name of the current object to 
+    * decide what kind of object it is. It then uses the correct parsing 
+    * function.
+    */
     public static void parseChildren( Element current, int depth )
     {
 	// get children of current node
@@ -152,59 +180,49 @@ public class xmlparser {
         if(current.getName() == "star")
         {
             isStar = true;
-//            System.out.print( "   printing star yaya \n");
             parseStar(current);
-            
-//            System.out.print("adding star to star list\n");
             starList.add(tempStar);
-//            System.out.println(tempStar.name+":"+tempStar.commonName+":"+tempStar.dec+":"+tempStar.ra+":"+tempStar.starClass+":"+tempStar.starConstellation+":"+tempStar.vmag+";;\n");
-            
         }
         else if(current.getName() == "constellation" && isStar == false)
         {
-//            System.out.print( "   printing constellation yaya \n");
             parseConstellation(current);
             constellationList.add(tempConstellation);
-//            System.out.println(tempConstellation.getName()+":"+tempConstellation.getAbbr()+":"+tempConstellation.getLineCount()+":"+tempConstellation.getStarSet(0)[0]+";;\n");
         }
               
-        // recursively process each child node
-        //hmmmm. this seems to do alot of extra work. hmmmmmmmmm.
-        //not that much extra work? additionally, if we don't have /something/ here, we only get one branch of a thing.
         while ( iterator.hasNext() )
         {
             Element child = ( Element ) iterator.next();
             parseChildren( child, depth + 1 );
         }
     }
-    
-    //i dunno if this is gonna work so well.
+        
+    /**
+    * @author Kelsey Bellew (using code from csc421 website)
+    * Goes through a constellation node and puts the information found there 
+    * into an instance of a constellation class. It then adds that instance 
+    * to the comprehensive list.
+    */
     public static void parseConstellation(Element current)
     {
         // get children of current node
         List children = current.getChildren();
         Iterator iterator = children.iterator();
 
-        
         //for constellations        
         if(!iterator.hasNext())
         {
             if(current.getName() == "name")
             {
                 tempConstellation = new constellation(current.getValue());
-//                System.out.print( "name: " + current.getName() +" = "+ current.getValue() +"\n");
             }
             else if(current.getName() == "abbr")
             {
                 tempConstellation.setAbbr(current.getValue().replaceAll("\\s+",""));
-//                System.out.print( "abbr: " + current.getName() +" = "+ current.getValue() +"\n");
             }
             else if(current.getName() == "line")
             {
-//                System.out.print( "line: " + current.getName() +" = "+ current.getValue() +"\n");
                 String[] lines = current.getValue().split("\\s+");
 
-//                System.out.print(lines[0] +":"+ lines[1]+":"+ lines[2]+":"+ lines[3] +"\n");
                 tempConstellation.addStarSet(lines[1], lines[3]);
             }
         }
@@ -215,9 +233,14 @@ public class xmlparser {
             Element child = (Element)iterator.next();
             parseConstellation(child);
         }
-        
     }
     
+    /**
+    * @author Kelsey Bellew (using code from csc421 website)
+    * Goes through a star node and puts the information found there into an 
+    * instance of a star class. It then adds that instance to the 
+    * comprehensive list.
+    */
     public static void parseStar(Element current)
     {
         // get children of current node
@@ -228,20 +251,16 @@ public class xmlparser {
         {
             if(current.getName() == "HRnumber")
             {
-//                System.out.print("new star?\n");
-//                System.out.print( "hrnumber: " + current.getName() +" = "+ current.getValue() +"\n");
                 tempStar = new star();
                 int t = Integer.parseInt(current.getValue().toString());
                 tempStar.hrnumber = t;
             }
             else if(current.getName() == "name")
             {
-//                System.out.print( "name: " + current.getName() +" = "+ current.getValue() +"\n");
                 tempStar.name = current.getValue().replaceAll("\\s+","");
             }
             else if(current.getName() == "constellation")
             {
-//                System.out.print( "constellation: " + current.getName() +" = "+ current.getValue() +"\n");
                 tempStar.starConstellation = current.getValue().replaceAll("\\s+","");
             }
             else if(current.getName() == "ra")
@@ -266,9 +285,7 @@ public class xmlparser {
             }
             else if(current.getName() == "dec")
             {
-//                System.out.print( "dec: " + current.getName() +" = "+ current.getValue() +"\n");
                 String[] lines = current.getValue().split("\\s+");
-//                System.out.println("dec:"+lines[0]+":"+lines[1]+":"+lines[2]+":"+lines[3]+";");
                 
                 double deg = 0, min = 0, sec = 0; 
                 if (lines.length >= 1)
@@ -289,17 +306,14 @@ public class xmlparser {
             }
             else if(current.getName() == "vmag")
             {
-//                System.out.print( "vmag: " + current.getName() +" = "+ current.getValue() +"\n");
                 tempStar.vmag = Double.parseDouble(current.getValue());
             }
             else if(current.getName() == "class")
             {
-//                System.out.print( "class: " + current.getName() +" = "+ current.getValue() +"\n");
                 tempStar.starClass = current.getValue();
             }
             else if(current.getName() == "common_name")
             {
-//                System.out.print( "common_name: " + current.getName() +" = "+ current.getValue() +"\n");
                 tempStar.commonName = current.getValue();
             }
         }

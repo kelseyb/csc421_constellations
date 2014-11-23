@@ -143,6 +143,13 @@ public class StarMap extends JFrame {
         setVisible(true); 
     }
     
+        
+    /**
+    * @author Kelsey Bellew 
+    * Shows a new window to the user with two text boxes and six sliders with 
+    * which they can change the current date, time, longitude, latitude, 
+    * azimuth, and altitude.
+    */
     private void changeLocation(){
         _scrollAmount = 0; 
         scrollScale = 1; 
@@ -225,7 +232,6 @@ public class StarMap extends JFrame {
         altSlider.setPreferredSize(new Dimension(500, 50));
         
         //initialize Azimuth slider
-        //System.out.println("azi:"+azi);
         if(azi > 360) azi = 360;
         if(azi < 0) azi = 0;
         JSlider aziSlider = new JSlider(0, 360, (int)azi); 
@@ -259,7 +265,6 @@ public class StarMap extends JFrame {
                     ((Date)timeTextField.getValue()).getSeconds());
             
             cal.setTime(tempCal.getTime());
-            //System.out.println("cal: " + cal);
             
             lat = latSlider.getValue();
             lon = lonSlider.getValue();
@@ -313,6 +318,12 @@ public class StarMap extends JFrame {
         repaint(); 
     }
     
+            
+    /**
+    * @author Kelsey Bellew 
+    * Shows a new window with a slider and allows the user to change the 
+    * minimum magnitude.
+    */
     private void changeVisualMagnitude(){
         
         //initizliae frame
