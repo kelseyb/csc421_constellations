@@ -29,7 +29,7 @@ public class xmlparser {
     private static star tempStar;
 
     /**
-    * @author Kelsey Bellew
+    * @author Caitlin Taggart and Kelsey Bellew
     * Constructor for the xml parser class. It calls the function to parse 
     * through the star file, and then the constellation file.
     */ 
@@ -49,6 +49,8 @@ public class xmlparser {
     /**
     * @author Caitlin Taggart
     * ?
+    * 
+    * @param xmlFiles - A list of strings containing the xml files to be parsed.
     */ 
     public xmlparser(String[] xmlFiles){
         for(String s : xmlFiles)
@@ -58,7 +60,7 @@ public class xmlparser {
     }
     
     /**
-    * @author Kelsey Bellew and Caitlin Taggart
+    * @author Caitlin Taggart and Kelsey Bellew
     * Star class to hold all the information associated with a given star.
     */ 
     public static class star implements Comparable
@@ -138,6 +140,8 @@ public class xmlparser {
     /**
     * @author Kelsey Bellew (using code from csc421 website)
     * Takes in the name of an xml file and sets up the xml file to be read.
+    * 
+    * @param xml - The string containing the xml name.
     */
     public static void generateStar(String xml)
     {
@@ -148,9 +152,9 @@ public class xmlparser {
         SAXBuilder builder = new SAXBuilder();
         try
         {
-            Document doc = builder.build(xml);// args[0] );	// parse XML tags
+            Document doc = builder.build(xml);          // parse XML tags
             Element root = doc.getRootElement();	// get root of XML tree
-            parseChildren( root, 0 );			// print info in XML tree
+            parseChildren( root);			// print info in XML tree
             
         }
         // JDOMException indicates a well-formedness error
@@ -170,8 +174,10 @@ public class xmlparser {
     * Goes through the xml file, looking at the name of the current object to 
     * decide what kind of object it is. It then uses the correct parsing 
     * function.
+    * 
+    * @param current - the current line of the xml
     */
-    public static void parseChildren( Element current, int depth )
+    public static void parseChildren( Element current)
     {
 	// get children of current node
         List children = current.getChildren();
@@ -192,7 +198,7 @@ public class xmlparser {
         while ( iterator.hasNext() )
         {
             Element child = ( Element ) iterator.next();
-            parseChildren( child, depth + 1 );
+            parseChildren( child);
         }
     }
         
@@ -201,6 +207,8 @@ public class xmlparser {
     * Goes through a constellation node and puts the information found there 
     * into an instance of a constellation class. It then adds that instance 
     * to the comprehensive list.
+    * 
+    * @param current - the current line of the xml
     */
     public static void parseConstellation(Element current)
     {
@@ -240,6 +248,8 @@ public class xmlparser {
     * Goes through a star node and puts the information found there into an 
     * instance of a star class. It then adds that instance to the 
     * comprehensive list.
+    * 
+    * @param current - the current line of the xml
     */
     public static void parseStar(Element current)
     {
